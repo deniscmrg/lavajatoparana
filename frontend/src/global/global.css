@@ -1,0 +1,76 @@
+/* src/styles/global.css */
+
+/* === VARIÁVEIS === */
+:root {
+    --color-primary: #2B9FAE;
+    --color-primary-hover: #248a98;
+    --color-bg: #f8f9fa;
+    --color-text: #333;
+    --color-white: #fff;
+    --font-base: 'Arial', sans-serif;
+  }
+  
+  /* === RESET / BASE === */
+  * {
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-base);
+  }
+  
+  /* === BOTÕES === */
+  .btn {
+    padding: 10px 16px;
+    font-size: 15px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+  }
+  
+  .btn-primary:hover {
+    background-color: var(--color-primary-hover);
+  }
+  
+  /* === INPUTS === */
+  .input {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  /* === CONTAINERS === */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .card {
+    background: var(--color-white);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+  }
+  
+  /* === TÍTULOS === */
+  .title {
+    font-size: 24px;
+    color: var(--color-primary);
+    margin-bottom: 20px;
+  }
+  

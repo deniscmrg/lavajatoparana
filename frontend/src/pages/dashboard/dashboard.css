@@ -1,0 +1,13 @@
+.dashboard-container {
+    display: flex;
+  }
+  
+  .main-content {
+    margin-left: 220px;
+    width: calc(100% - 220px);
+  }
+  
+  .content {
+    padding: 20px;
+  }
+  

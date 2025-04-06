@@ -1,0 +1,40 @@
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import logo from '../../assets/logo.jpeg';
+import './sidebar.css';
+
+const menuItems = [
+  { name: 'Tela inicial', path: '/dashboard' },
+  { name: 'Ordens de Serviço', path: '/ordens' },
+  { name: 'Clientes', path: '/clientes' },
+  { name: 'Veiculos', path: '/veiculos' },
+  { name: 'Serviços', path: '/servicos' },
+  { name: 'Caixa', path: '/caixa' },
+  { name: 'Relatorios', path: '/relatorios' },
+  { name: 'Usuarios', path: '/usuarios' }
+
+];
+
+const Sidebar = () => {
+  return (
+    <div className="sidebar">
+      <img src={logo} alt="Logo" className="sidebar-logo" />
+
+      <nav>
+        {menuItems.map((item, index) => (
+          <NavLink
+            key={index}
+            to={item.path}
+            className={({ isActive }) =>
+              isActive ? 'menu-item active' : 'menu-item'
+            }
+          >
+            {item.name}
+          </NavLink>
+        ))}
+      </nav>
+    </div>
+  );
+};
+
+export default Sidebar;

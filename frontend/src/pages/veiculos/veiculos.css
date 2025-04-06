@@ -1,0 +1,98 @@
+ .pagina-veiculos {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .header-veiculos {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    color: #2B9FAE;
+  }
+  
+  .header-veiculos h2 {
+    margin: 0;
+  }
+  
+  .btn {
+    padding: 8px 16px;
+    background-color: #2B9FAE;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .btn:hover {
+    background-color: #238a99;
+  }
+  
+  .filtro-veiculos {
+    margin-bottom: 15px;
+  }
+  
+  .filtro-veiculos input {
+    padding: 8px;
+    width: 100%;
+    max-width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  
+  .tabela-veiculos {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  }
+  
+  .tabela-veiculos th,
+  .tabela-veiculos td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .tabela-veiculos th {
+    background-color: #2B9FAE;
+    color: white;
+    cursor: pointer;
+  }
+
+  .tabela-veiculos tr{
+    padding: 8px;
+  }
+
+  .tabela-veiculos tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .tabela-veiculos th:hover {
+    background-color: #cef0f4;
+    color: #2B9FAE;
+  }
+  
+  .icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-right: 8px;
+    color: #2B9FAE;
+  }
+  
+  .icon-button:hover {
+    color: #176873;
+  }
+
+  .form-container h3 {
+    color: #2B9FAE
+  }
+  
+  .input-com-botao {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }

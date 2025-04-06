@@ -1,0 +1,78 @@
+.pagina-listagem {
+    padding: 20px;
+  }
+  
+  .cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+
+  .cabecalho h2{
+    color: #2b9fae;
+
+  }
+  
+  .input-filtro {
+    width: 100%;
+    max-width: 300px;
+    padding: 8px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+  
+  .tabela {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .tabela th,
+  .tabela td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .tabela th {
+    background-color: #2b9fae;
+    color: white;
+  }
+  
+  .icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-right: 5px;
+  }
+  
+  .icon-button.excluir {
+    color: red;
+  }
+  
+  .form-container {
+    width: 600px;
+  }
+
+  .form-os .grid-2 {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .form-os .grid-2 > div {
+    flex: 1;
+  }
+
+  .form-os .input-w300 {
+      width: 300px;
+      gap: 10px;
+      padding: 8px;
+  }
+
+  .form-os .input-w150 {
+    width: 150px;
+    gap: 10px;
+    padding: 8px;
+}
