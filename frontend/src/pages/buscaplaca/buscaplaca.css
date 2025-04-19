@@ -1,0 +1,59 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .modal-placa {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .modal-placa h2 {
+    margin-bottom: 1rem;
+    color: #2B9FAE;
+  }
+  
+  .modal-placa label {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  
+  .modal-placa input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+  }
+  
+  .buttons button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .buttons button[type="submit"] {
+    background-color: #2B9FAE;
+    color: white;
+  }
+  
+  .buttons button[type="button"] {
+    background-color: #ccc;
+  }
+  

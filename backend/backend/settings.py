@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_filters',
     'rest_framework',
     'corsheaders',
     'core',
@@ -93,7 +94,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'parana',             # nome do seu banco
         'USER': 'root',               # ou o usuário que você criou
-        'PASSWORD': 'D@nte512',       # a senha que você definiu
+        'PASSWORD': 'root',
+        #'PASSWORD': 'D@nte512',       # a senha que você definiu
         'HOST': 'localhost',          # ou 'localhost'
         'PORT': '3306',               # ou '3307' se você tiver trocado
     }
@@ -111,6 +113,9 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',  # Padrão: exige login
+    ],
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend'
     ],
 }
 

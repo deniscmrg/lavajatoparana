@@ -28,6 +28,7 @@ function App() {
           <Route path="servicos" element={<Servicos />} />
           <Route path="clientes" element={<Clientes />} />
           <Route path="veiculos" element={<Veiculos />} />
+          
         </Route>
       </Routes>
     </Router>

@@ -75,4 +75,42 @@
     width: 150px;
     gap: 10px;
     padding: 8px;
+  }
+
+  /* Sobreposição da tela inteira */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* escurece o fundo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
 }
+
+/* Caixa branca centralizada */
+.modal-conteudo {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Botões dentro do modal */
+.modal-botoes {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.modal-botoes .btn {
+  min-width: 80px;
+}
+
+

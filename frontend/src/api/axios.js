@@ -6,14 +6,25 @@ const api = axios.create({
   baseURL: BASE_URL,
 });
 
+
 // Adiciona o token nos headers, se existir
+
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('accessToken');
+
+  // console.log('[AXIOS] Interceptor ativado');
+  // console.log('[AXIOS] Token encontrado:', token);
+
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
+    //console.log('[AXIOS] Header Authorization foi setado!');
+  } else {
+    console.warn('[AXIOS] Nenhum token encontrado!');
   }
+
   return config;
 });
 
-
 export default api;
+
+
