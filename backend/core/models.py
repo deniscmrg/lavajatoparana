@@ -36,6 +36,27 @@ class Servico(models.Model):
         return self.descricao
 
 
+# class OrdemDeServico(models.Model):
+#     STATUS_CHOICES = [
+#         ('aberta', 'Aberta'),
+#         ('finalizada', 'Finalizada'),
+#         ('cancelada', 'Cancelada'),
+#     ]
+
+#     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+#     data = models.DateTimeField(auto_now_add=True)
+#     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='aberta')
+#     operador = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+#     forma_pagamento = models.CharField(max_length=50)
+#     veiculo = models.ForeignKey(Veiculo, on_delete=models.CASCADE)
+
+#     def __str__(self):
+#         return f'OS {self.id} - {self.cliente.nome}'
+
+from django.db import models
+from django.contrib.auth.models import User
+from .models import Cliente, Veiculo  # ajuste o import conforme a estrutura do seu projeto
+
 class OrdemDeServico(models.Model):
     STATUS_CHOICES = [
         ('aberta', 'Aberta'),
@@ -49,6 +70,7 @@ class OrdemDeServico(models.Model):
     operador = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     forma_pagamento = models.CharField(max_length=50)
     veiculo = models.ForeignKey(Veiculo, on_delete=models.CASCADE)
+    data_fechamento = models.DateTimeField(null=True, blank=True)  # <-- CAMPO NOVO
 
     def __str__(self):
         return f'OS {self.id} - {self.cliente.nome}'
@@ -85,3 +107,20 @@ class Caixa(models.Model):
 
     def __str__(self):
         return f'{self.tipo.upper()} - R$ {self.valor}'
+
+
+class LancamentoCaixa(models.Model):
+    TIPO_CHOICES = (
+        ('entrada', 'Entrada'),
+        ('saida', 'Saída'),
+    )
+
+    origem = models.CharField(max_length=100)
+    descricao = models.TextField(blank=True, null=True)
+    categoria = models.CharField(max_length=100)
+    tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
+    valor = models.DecimalField(max_digits=10, decimal_places=2)
+    data = models.DateField()
+
+    def __str__(self):
+        return f"{self.origem} - {self.valor} ({self.tipo})"

@@ -48,12 +48,10 @@
     cursor: pointer;
   }
   
-  .buttons button[type="submit"] {
+  .buttons button {
     background-color: #2B9FAE;
     color: white;
   }
   
-  .buttons button[type="button"] {
-    background-color: #ccc;
-  }
+ 
   

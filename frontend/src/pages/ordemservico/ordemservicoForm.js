@@ -3,7 +3,7 @@ import axios from '../../api/axios';
 import './ordemServicoForm.css';
 import { FiTrash2 } from 'react-icons/fi';
 
-const dataHoje = new Date().toLocaleDateString('pt-BR');
+const dataHoje = new Date().toISOString();
 
 const OrdemServicoForm = ({ editData, onClose, atualizarOrdens }) => {
   const [quantidadeServico, setQuantidadeServico] = useState(1);
@@ -79,9 +79,18 @@ const OrdemServicoForm = ({ editData, onClose, atualizarOrdens }) => {
     if (editData.id) {
       axios.get(`/ordens-servico/${editData.id}/`).then(res => {
         const d = res.data;
+        
+        //tratamento da data
+        const dataOriginal = new Date(d.data);
+        const dataFormatada = `${dataOriginal.toLocaleDateString('pt-BR')}, ${dataOriginal.toLocaleTimeString('pt-BR', {
+          hour: '2-digit',
+          minute: '2-digit'
+        })}`;
+
+
         setOrdem({
           id: d.id,
-          data: d.data,
+          data: dataFormatada,
           status: d.status,
           operador: d.operador,
           forma_pagamento: d.forma_pagamento,
@@ -103,14 +112,14 @@ const OrdemServicoForm = ({ editData, onClose, atualizarOrdens }) => {
       });
     } 
     // else if (editData.placa && !editData.id) {
-      else if (editData.veiculo?.placa && !editData.id) {
+      else if (editData.placa && !editData.id) {
       // buscarPorPlaca(editData.placa);
 
       console.log('entrou para carregar os dados na tela', editData.placa)
       const carregarVeiculoECliente = async () => {
         try {
           
-          const { placa, cliente_id } = editData.veiculo;
+          const { placa, cliente_id } = editData;
 
           console.log('[DEBUG] Dados carregados:', placa, cliente_id);
 
@@ -246,9 +255,9 @@ const salvarOrdem = async () => {
         </div>
 
         <div className="linha">
-          <div><label>#OS</label><input value={ordem.id} readOnly /></div>
-          <div><label>Data</label><input value={ordem.data} readOnly /></div>
-          <div><label>Status</label><select value={ordem.status} onChange={e => setOrdem({ ...ordem, status: e.target.value })}><option value="aberta">Aberta</option><option value="finalizada">Finalizada</option><option value="cancelada">Cancelada</option></select></div>
+          <div><label>#OS</label><input className='read-only' value={ordem.id} readOnly /></div>
+          <div><label>Data</label><input className='read-only' value={ordem.data} readOnly /></div>
+          <div><label>Status</label><input className='read-only' value={ordem.status} readOnly /></div>
           <div><label>Operador</label><input value={ordem.operador} onChange={e => setOrdem({ ...ordem, operador: e.target.value })} /></div>
         </div>
 
@@ -314,8 +323,8 @@ const salvarOrdem = async () => {
 
         <div className="total">TOTAL: R$ {calcularTotal()}</div>
         <div className="form-buttons">
-          <button type="button" className="btn" onClick={onClose}>Cancelar</button>
           <button className="btn-primary" onClick={salvarOrdem}>Salvar</button>
+          <button type="button" className="btn-primary" onClick={onClose}>Cancelar</button>
         </div>
       </div>
     </div>

@@ -13,6 +13,12 @@
     margin-bottom: 20px;
     color: #2B9FAE;
   }
+
+  .read-only{
+    border: 0px tr #ffffff;
+    background-color: #f7efef;
+    font-weight: bold;
+  }
   
   .linha {
     display: flex;

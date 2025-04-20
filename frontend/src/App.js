@@ -8,6 +8,7 @@ import PrivateRoute from './routes/PrivateRoute';
 import Veiculos from './pages/veiculos';
 import Clientes from './pages/clientes';
 import OrdensServico from './pages/ordemservico';
+import Caixa from './pages/caixa/Caixa';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="servicos" element={<Servicos />} />
           <Route path="clientes" element={<Clientes />} />
           <Route path="veiculos" element={<Veiculos />} />
+          <Route path="caixa" element={<Caixa />} />
           
         </Route>
       </Routes>

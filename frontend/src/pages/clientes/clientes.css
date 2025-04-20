@@ -136,6 +136,7 @@
 
 .form-buttons {
   margin-top: 1.5rem;
+  gap: 5px;
   display: flex;
   justify-content: space-between;
 }

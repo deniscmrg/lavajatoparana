@@ -26,18 +26,33 @@
   .tabela {
     width: 100%;
     border-collapse: collapse;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   }
   
   .tabela th,
   .tabela td {
-    border: 1px solid #ccc;
-    padding: 8px;
     text-align: left;
+    height: 30px;
+    padding: 10px 16px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+
+  .tabela tr {
+    height: 10px;
   }
   
   .tabela th {
     background-color: #2b9fae;
+    padding: 8px;
     color: white;
+  }
+
+  .tabela tr:hover {
+    background-color: #f1f1f1;
   }
   
   .icon-button {
@@ -113,4 +128,8 @@
   min-width: 80px;
 }
 
-
+ 
+.icon-button.desativado {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

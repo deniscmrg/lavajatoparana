@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated
-from .models import Cliente, Veiculo, Servico, OrdemDeServico, ServicoOrdemServico, Fatura, Caixa
+from .models import Cliente, Veiculo, Servico, OrdemDeServico, ServicoOrdemServico, Fatura, Caixa, LancamentoCaixa
 from .serializers import (
     ClienteSerializer,
     VeiculoSerializer,
@@ -10,8 +10,10 @@ from .serializers import (
     OrdemDeServicoSerializer,
     ServicoOrdemServicoSerializer,
     FaturaSerializer,
-    CaixaSerializer
+    CaixaSerializer, 
+    LancamentoCaixaSerializer
 )
+
 
 # class ClienteViewSet(viewsets.ModelViewSet):
 #     queryset = Cliente.objects.all()
@@ -48,3 +50,7 @@ class FaturaViewSet(viewsets.ModelViewSet):
 class CaixaViewSet(viewsets.ModelViewSet):
     queryset = Caixa.objects.all()
     serializer_class = CaixaSerializer
+    
+class LancamentoCaixaViewSet(viewsets.ModelViewSet):
+    queryset = LancamentoCaixa.objects.all().order_by('-data')
+    serializer_class = LancamentoCaixaSerializer

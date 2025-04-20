@@ -28,4 +28,13 @@
     width: 100%;
     margin-bottom: 16px;
   }
+
+  .input-login {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    margin-bottom: 10px;
+  }
   

@@ -7,7 +7,7 @@ from .views import (
     OrdemDeServicoViewSet,
     ServicoOrdemServicoViewSet,
     FaturaViewSet,
-    CaixaViewSet
+    LancamentoCaixaViewSet
 )
 
 router = DefaultRouter()
@@ -17,7 +17,7 @@ router.register(r'servicos', ServicoViewSet)
 router.register(r'ordens-servico', OrdemDeServicoViewSet)
 router.register(r'servicos-ordem', ServicoOrdemServicoViewSet)
 router.register(r'faturas', FaturaViewSet)
-router.register(r'caixa', CaixaViewSet)
+router.register(r'caixa', LancamentoCaixaViewSet, basename='caixa')
 
 urlpatterns = [
     path('', include(router.urls)),

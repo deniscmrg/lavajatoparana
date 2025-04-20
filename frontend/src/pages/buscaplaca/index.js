@@ -26,8 +26,8 @@ const ModalPlaca = ({ isOpen, onClose, onConfirm }) => {
             required
           />
           <div className="buttons">
-            <button type="submit">OK</button>
-            <button type="button" onClick={onClose}>Cancelar</button>
+            <button  type="submit">OK</button>
+            <button  type="button" onClick={onClose}>Cancelar</button>
           </div>
         </form>
       </div>

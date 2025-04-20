@@ -37,10 +37,22 @@
     background-color: var(--color-primary);
     color: var(--color-white);
   }
+
+  .btn .btn-secondary {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+  }
   
   .btn-primary:hover {
     background-color: var(--color-primary-hover);
   }
+
+  .btn-secondary:hover {
+    background-color: var(--color-primary-hover);
+  }
+
+
+  btn btn-primary
   
   /* === INPUTS === */
   .input {

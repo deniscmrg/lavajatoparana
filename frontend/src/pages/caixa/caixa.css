@@ -1,0 +1,81 @@
+/* src/pages/caixa/caixa.css */
+
+.pagina-caixa {
+  padding: 20px;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+.header-caixa {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header-caixa h2 {
+  color: #2B9FAE;
+  margin: 0;
+}
+
+.tabela-caixa {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.tabela-caixa th,
+.tabela-caixa td {
+  height: 30px;
+  padding: 10px 16px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.tabela-caixa th {
+  padding: 8px;
+  background-color: #2B9FAE;
+  color: white;
+}
+
+.tabela-caixa th:hover {
+  background-color: #cef0f4;
+  color: #2B9FAE;
+  cursor: pointer;
+}
+
+.tabela-caixa tr:hover {
+  background-color: #f1f1f1;
+}
+
+.filtro-caixa {
+  margin: 1rem 0;
+}
+
+.filtro-caixa input {
+  padding: 0.5rem;
+  width: 100%;
+  max-width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin: 0 4px;
+  padding: 4px;
+  transition: transform 0.1s ease;
+}
+
+.icon-button:hover {
+  transform: scale(1.1);
+}
+
+.icon-button.excluir svg {
+  color: #d9534f;
+}

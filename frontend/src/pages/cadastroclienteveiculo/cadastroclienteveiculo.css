@@ -1,81 +1,86 @@
-/* cadastroClienteVeiculo.css */
+/* =========================================================
+   CadastroClienteVeiculo - layout enxuto
+   ========================================================= */
 
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-  }
-  
-  .modal-conteudo.cadastro-cv {
-    background-color: #fff;
-    padding: 2rem;
-    border-radius: 10px;
-    width: 90%;
-    max-width: 600px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
-  
-  .cadastro-cv h3 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-    color: #2B9FAE;
-  }
-  
-  .cadastro-cv .grid-2 {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    margin-bottom: 1rem;
-  }
-  
-  .cadastro-cv .grid-2 > div {
-    flex: 1;
-    min-width: 150px;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .cadastro-cv label {
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-  }
-  
-  .cadastro-cv input,
-  .cadastro-cv select {
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1rem;
-  }
-  
-  .modal-botoes {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
-    margin-top: 1.5rem;
-  }
-  
-  .modal-botoes .btn {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-  }
-  
-  .modal-botoes .btn-primary {
-    background-color: #2B9FAE;
-    color: white;
-  }
-  
-  .modal-botoes .btn:not(.btn-primary) {
-    background-color: #ccc;
-    color: #333;
-  }
+/* --- Modal --------------------------------------------------------- */
+.modal-overlay{
+  position:fixed; inset:0;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.55); z-index:1000;
+}
+.modal-conteudo.cadastro-cv{
+  background:#fff; padding:2rem;
+  border-radius:10px; width:92%; max-width:900px;
+  box-shadow:0 6px 18px rgba(0,0,0,.18);
+}
+
+/* --- Título -------------------------------------------------------- */
+.cadastro-cv h3{
+  margin:0 0 1.25rem; text-align:center;
+  color:#2B9FAE; font-size:1.35rem; font-weight:700;
+}
+
+/* --- Grid principal ------------------------------------------------ */
+/* 1ª fileira: Celular | Btn | Nome | Email (largura dobrada) */
+.linha-cliente{
+  display:grid;
+  grid-template-columns:1fr 130px 1fr 2fr;
+  gap:1rem; margin-bottom:1.25rem; align-items:end;
+}
+/* 2ª fileira: Marca | Modelo | Cor                             */
+.linha-veiculo{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1rem; margin-bottom:1.25rem;
+}
+
+.linha-veiculo .modelo{
+  width: 370px;
+}
+
+/* 3ª fileira (tipo / placa) pode continuar flex ou copiar o padrão */
+.linha-2cols{
+  display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:1.25rem;
+}
+.linha-2cols>div{flex:1 1 180px; display:flex; flex-direction:column;}
+
+/* --- Campos -------------------------------------------------------- */
+.cadastro-cv label{font-weight:600;margin-bottom:.4rem;}
+.cadastro-cv input, .cadastro-cv select{
+  padding:.55rem .6rem; border:1px solid #ccc; border-radius:6px;
+  font-size:1rem; transition:border-color .15s;
+}
+.cadastro-cv input:focus, .cadastro-cv select:focus{
+  outline:none; border-color:#2B9FAE;
+}
+
+/* --- Botão Verificar ---------------------------------------------- */
+.btn-wrap{display:flex;flex-direction:column;}
+.btn-verificar{
+  height:40px; width:100%;
+  background:#2B9FAE; color:#fff; font-weight:600;
+  border:none; border-radius:6px; cursor:pointer;
+}
+.btn-verificar:hover{filter:brightness(1.08);}
+
+/* --- Botões de ação ----------------------------------------------- */
+.modal-botoes{
+  display:flex; justify-content:flex-end; gap:.6rem; margin-top:1.75rem;
+}
+.modal-botoes .btn{
+  padding:.55rem 1.2rem; border:none; border-radius:6px;
+  font-weight:700; cursor:pointer; transition:filter .15s;
+}
+.modal-botoes .btn-primary{background:#2B9FAE;color:#fff;}
+.modal-botoes .btn:not(.btn-primary){background:#dcdcdc;color:#333;}
+.modal-botoes .btn:hover{filter:brightness(1.08);}
+
+/* --- Mobile: empilha tudo ----------------------------------------- */
+@media(max-width:640px){
+  .linha-cliente, .linha-veiculo{grid-template-columns:1fr;}
+  .modal-conteudo.cadastro-cv{padding:1.5rem 1.25rem;}
+  .linha-2cols>div{flex:1 1 100%;}
+}
+
+/* fim */
+

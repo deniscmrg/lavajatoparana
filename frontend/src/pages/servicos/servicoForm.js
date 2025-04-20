@@ -67,7 +67,7 @@ function ServicoForm({ onClose, editData }) {
 
           <div className="form-buttons">
             <button className="btn btn-primary" type="submit">Salvar</button>
-            <button className="btn btn-secondary" type="button" onClick={onClose}>Cancelar</button>
+            <button className="btn btn-primary" type="button" onClick={onClose}>Cancelar</button>
           </div>
         </form>
       </div>
