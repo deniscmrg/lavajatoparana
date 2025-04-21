@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/layout';
 import Login from './pages/login';
 import Dashboard from './pages/dashboard';
@@ -14,23 +14,22 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/* Rota pública de login */}
         <Route path="/login" element={<Login />} />
 
-        <Route
-          path="/"
-          element={
-            <PrivateRoute>
-              <Layout />
-            </PrivateRoute>
-          }
-        >
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="ordens" element={<OrdensServico />} />
-          <Route path="servicos" element={<Servicos />} />
-          <Route path="clientes" element={<Clientes />} />
-          <Route path="veiculos" element={<Veiculos />} />
-          <Route path="caixa" element={<Caixa />} />
-          
+        {/* Rota protegida que verifica o token */}
+        <Route path="/" element={<PrivateRoute />}>
+          {/* Layout com menu e cabeçalho */}
+          <Route element={<Layout />}>
+            {/* Redireciona / para /dashboard */}
+            <Route index element={<Navigate to="/dashboard" />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="ordens" element={<OrdensServico />} />
+            <Route path="servicos" element={<Servicos />} />
+            <Route path="clientes" element={<Clientes />} />
+            <Route path="veiculos" element={<Veiculos />} />
+            <Route path="caixa" element={<Caixa />} />
+          </Route>
         </Route>
       </Routes>
     </Router>
@@ -38,3 +37,4 @@ function App() {
 }
 
 export default App;
+

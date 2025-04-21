@@ -1,21 +1,21 @@
 import React from 'react';
-import Sidebar from '../sidebar';
-import Header from '../header';
-import './layout.css'; // vamos criar esse CSS também
 import { Outlet } from 'react-router-dom';
+import Header from '../header';
+import Sidebar from '../sidebar';
+import './layout.css';
 
-const Layout = () => {
+function Layout() {
   return (
-    <div className="layout">
-    <Sidebar />
-    <div className="main-area">
-      <Header />
-      <main className="content">
-        <Outlet />
+  <div className="layout">
+     <Sidebar />
+     <div className="main-area">
+       <Header />
+      <main className="conteudo">
+        <Outlet /> {/* <- ESSENCIAL: onde os filhos são renderizados */}
       </main>
     </div>
   </div>
   );
-};
+}
 
 export default Layout;

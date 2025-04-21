@@ -21,7 +21,7 @@ function Login() {
       localStorage.setItem('accessToken', response.data.access);
       localStorage.setItem('refreshToken', response.data.refresh);
 
-      navigate('/dashboard');
+      navigate('/dashboard', { replace: true });
     } catch (error) {
       alert('Usuário ou senha inválidos.');
     }
