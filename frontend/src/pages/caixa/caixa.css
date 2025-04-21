@@ -79,3 +79,8 @@
 .icon-button.excluir svg {
   color: #d9534f;
 }
+
+.valor-saida {
+  color: #d9534f;
+  /* font-weight: bold; */
+}

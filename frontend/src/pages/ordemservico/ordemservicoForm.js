@@ -12,7 +12,7 @@ const OrdemServicoForm = ({ editData, onClose, atualizarOrdens }) => {
     data: dataHoje,
     status: 'aberta',
     operador: '',
-    forma_pagamento: 'dinheiro',
+    forma_pagamento: '',
     valor_recebido: '',
     placa: '',
     marca: '',

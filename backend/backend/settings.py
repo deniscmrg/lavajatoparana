@@ -11,9 +11,13 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 from datetime import timedelta
 from pathlib import Path
+import dj_database_url
+from decouple import config
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -25,11 +29,10 @@ SECRET_KEY = 'django-insecure-bgooi3k!8exw)6csj-qh=ai55pi93bz)d9#mp$@_jrz^9h=w6e
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+#ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -87,19 +90,36 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'parana',             # nome do seu banco
+#         'USER': 'root',               # ou o usuário que você criou
+#         'PASSWORD': 'root',
+#         #'PASSWORD': 'D@nte512',       # a senha que você definiu
+#         'HOST': 'localhost',          # ou 'localhost'
+#         'PORT': '3306',               # ou '3307' se você tiver trocado
+#     }
+   
+#             }
 
+USE_POSTGRES = config('USE_POSTGRES', default=False, cast=bool)
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'parana',             # nome do seu banco
-        'USER': 'root',               # ou o usuário que você criou
-        'PASSWORD': 'root',
-        #'PASSWORD': 'D@nte512',       # a senha que você definiu
-        'HOST': 'localhost',          # ou 'localhost'
-        'PORT': '3306',               # ou '3307' se você tiver trocado
+if USE_POSTGRES:
+    DATABASES = {
+        'default': dj_database_url.config(default=config('DATABASE_URL'))
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': config('DB_NAME', default='parana'),
+            'USER': config('DB_USER', default='root'),
+            'PASSWORD': config('DB_PASSWORD', default='root'),
+            'HOST': config('DB_HOST', default='localhost'),
+            'PORT': config('DB_PORT', default='3306'),
+        }
+    }
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
@@ -155,6 +175,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# para produção:
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

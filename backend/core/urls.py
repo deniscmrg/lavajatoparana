@@ -7,7 +7,8 @@ from .views import (
     OrdemDeServicoViewSet,
     ServicoOrdemServicoViewSet,
     FaturaViewSet,
-    LancamentoCaixaViewSet
+    LancamentoCaixaViewSet,
+    ServicosPorOrdemAPIView
 )
 
 router = DefaultRouter()
@@ -21,4 +22,5 @@ router.register(r'caixa', LancamentoCaixaViewSet, basename='caixa')
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('servicos-da-os/<int:ordem_id>/', ServicosPorOrdemAPIView.as_view()),  # ← rota adicional manual
 ]

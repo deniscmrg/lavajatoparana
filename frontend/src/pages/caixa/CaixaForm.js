@@ -7,13 +7,15 @@ function CaixaForm({ onClose, editData }) {
   const [descricao, setDescricao] = useState('');
   const [categoria, setCategoria] = useState('');
   const [tipo, setTipo] = useState('');
+  const [origem, setOrigem] = useState('Lançamento Manual');
   const [valor, setValor] = useState('');
   const [data, setData] = useState('2025-04-20');
 
   useEffect(() => {
     if (editData) {
-            setDescricao(editData.descricao || '');
+      setDescricao(editData.descricao || '');
       setCategoria(editData.categoria || '');
+      setOrigem(editData.origem || '');
       setTipo(editData.tipo || '');
       setValor(editData.valor || '');
       setData(editData.data || '');
@@ -22,7 +24,7 @@ function CaixaForm({ onClose, editData }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const payload = { descricao, categoria, tipo, valor, data };
+    const payload = { descricao, categoria, tipo, valor, data, origem };
     try {
       if (editData) {
         await api.put(`caixa/${editData.id}/`, payload);

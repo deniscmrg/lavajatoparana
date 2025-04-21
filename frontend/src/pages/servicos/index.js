@@ -95,7 +95,7 @@ function Servicos() {
         />
       </div>
 
-      <table className="tabela-servicos">
+      <table className="tabela-servicos-lista">
         <thead>
           <tr>
             <th className="sortable" onClick={() => handleSort('descricao')}>Descrição{renderSortArrow('descricao')}</th>

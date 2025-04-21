@@ -1,7 +1,7 @@
 // src/pages/caixa/Caixa.js
 import React, { useEffect, useState } from 'react';
 import api from '../../api/axios';
-import { Edit, Trash2, PlusCircle } from 'lucide-react';
+import { Edit, Trash2 } from 'lucide-react';
 import CaixaForm from './CaixaForm';
 import './caixa.css';
 
@@ -65,8 +65,8 @@ function Caixa() {
   return (
     <div className="pagina-caixa">
       <div className="header-caixa">
-        <button className="btn btn-primary" onClick={() => { setEditData(null); setShowForm(true); }}>Novo</button>
         <h2>Controle de Caixa</h2>
+        <button className="btn btn-primary" onClick={() => { setEditData(null); setShowForm(true); }}>Novo lançamento</button>
       </div>
 
       <div className="filtro-caixa">
@@ -76,6 +76,7 @@ function Caixa() {
           value={filtro}
           onChange={(e) => setFiltro(e.target.value)}
         />
+        
       </div>
 
       <table className="tabela-caixa">
@@ -98,12 +99,17 @@ function Caixa() {
               <td>{l.descricao}</td>
               <td>{l.categoria}</td>
               <td>{l.tipo}</td>
-              <td>R$ {parseFloat(l.valor).toFixed(2)}</td>
+              <td className={l.tipo === 'saida' ? 'valor-saida' : ''}>
+                R$ {parseFloat(l.valor).toFixed(2)}
+              </td>
               <td>
+                <button className="icon-button editar" onClick={() => { setEditData(l); setShowForm(true); }} title="Editar">
+                  <Edit size={18} />
+                </button>
                 <button className="icon-button excluir" onClick={() => handleDelete(l.id)} title="Excluir">
                   <Trash2 size={18} />
                 </button>
-              </td>
+            </td>
             </tr>
           ))}
         </tbody>

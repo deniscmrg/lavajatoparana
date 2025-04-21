@@ -1,164 +1,166 @@
+/* src/pages/servicos/servicos.css */
+
 .pagina-servicos {
-    padding: 20px;
-    background-color: #f9f9f9;
-    min-height: 100vh;
-  }
-  
-  .header-servicos {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  } 
-  
-  .header-servicos h2 {
-    color: #2B9FAE;
-    margin: 0;
-  }
-  
-  .btn {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-  }
-  
-  .btn-primary {
-    background-color: #2B9FAE;
-    color: white;
-  }
-  
-  .btn.editar {
-    background-color: #ffc107;
-    color: #333;
-    margin-right: 8px;
-  }
-  
-  .btn.excluir {
-    background-color: #dc3545;
-    color: white;
-  }
-  
+  padding: 20px;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
 
-  .tabela-servicos {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  }
-  
-  .tabela-servicos th,
-  .tabela-servicos td {
-    height: 30px;
-    padding: 10px 16px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-  }
+.header-servicos {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
 
-  .tabela-servicos tr {
-    height: 10px;
-  }
-  
-  .tabela-servicos th {
-    padding: 8px;
-    text-align: left;
-    background-color: #2B9FAE;
-    color: white;
-  }
+.header-servicos h2 {
+  color: #2B9FAE;
+  margin: 0;
+}
 
-  .tabela-servicos th:hover {
-    background-color: #cef0f4; /* opcional: adiciona um leve destaque */
-    color: #2B9FAE;
-  }
-  
-  .tabela-servicos th.sortable {
-    cursor: pointer;
-  }
-  
-  .tabela-servicos tr:hover {
-    background-color: #f1f1f1;
-  }
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
 
-  .filtro-servicos {
-    margin: 1rem 0;
-  }
-  
-  .filtro-servicos input {
-    padding: 0.5rem;
-    width: 100%;
-    max-width: 300px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-  }
+.btn-primary {
+  background-color: #2B9FAE;
+  color: white;
+}
 
-  .form-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-  }
-  
-  .form-container {
-    background-color: #fff;
-    padding: 2rem;
-    border-radius: 10px;
-    width: 400px;
-    max-width: 90%;
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
-  }
-  
-  .form-container h3 {
-    margin-bottom: 1rem;
-  }
-  
-  .form-container label {
-    display: block;
-    margin-top: 1rem;
-    margin-bottom: 0.3rem;
-  }
-  
-  .form-container input,
-  .form-container select {
-    width: 100%;
-    padding: 0.5rem;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-  }
-  
-  .form-buttons {
-    margin-top: 1.5rem;
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .icon-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    margin: 0 4px;
-    padding: 4px;
-    transition: transform 0.1s ease;
-  }
-  
-  .icon-button:hover {
-    transform: scale(1.1);
-  }
-  
-  .icon-button.editar svg {
-    color: #2B9FAE;
-  }
-  
-  .icon-button.excluir svg {
-    color: #d9534f;
-  }
-  
-  
+.btn.editar {
+  background-color: #ffc107;
+  color: #333;
+  margin-right: 8px;
+}
+
+.btn.excluir {
+  background-color: #dc3545;
+  color: white;
+}
+
+.tabela-servicos-lista {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.tabela-servicos-lista th,
+.tabela-servicos-lista td {
+  height: 30px;
+  padding: 10px 16px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.tabela-servicos-lista tr {
+  height: 10px;
+}
+
+.tabela-servicos-lista th {
+  padding: 8px;
+  background-color: #2B9FAE;
+  color: white;
+  border-bottom: 1px solid #2B9FAE;
+  border-right: none;
+  border-left: none;
+}
+
+.tabela-servicos-lista th:hover {
+  background-color: #cef0f4;
+  color: #2B9FAE;
+}
+
+.tabela-servicos-lista th.sortable {
+  cursor: pointer;
+}
+
+.tabela-servicos-lista tr:hover {
+  background-color: #f1f1f1;
+}
+
+.filtro-servicos {
+  margin: 1rem 0;
+}
+
+.filtro-servicos input {
+  padding: 0.5rem;
+  width: 100%;
+  max-width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.form-container {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+.form-container h3 {
+  margin-bottom: 1rem;
+}
+
+.form-container label {
+  display: block;
+  margin-top: 1rem;
+  margin-bottom: 0.3rem;
+}
+
+.form-container input,
+.form-container select {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.form-buttons {
+  margin-top: 1.5rem;
+  gap: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin: 0 4px;
+  padding: 4px;
+  transition: transform 0.1s ease;
+}
+
+.icon-button:hover {
+  transform: scale(1.1);
+}
+
+.icon-button.editar svg {
+  color: #2B9FAE;
+}
+
+.icon-button.excluir svg {
+  color: #d9534f;
+}

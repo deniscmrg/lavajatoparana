@@ -76,21 +76,58 @@ function OrdensServico() {
     setFecharAberto(true);
   };
 
+  // const fecharOrdem = async (formaPagamento) => {
+  //   if (!ordemParaFechar) return;
+  //   try {
+  //     await api.put(`/ordens-servico/${ordemParaFechar.id}/`, {
+  //       status: 'finalizada',
+  //       forma_pagamento: formaPagamento,
+  //       data_fechamento: new Date().toISOString()
+  //     });
+  //     setFecharAberto(false);
+  //     setOrdemParaFechar(null);
+  //     carregarOrdens();
+  //   } catch {
+  //     alert('Erro ao fechar a ordem de serviço.');
+  //   }
+  // };
+
   const fecharOrdem = async (formaPagamento) => {
     if (!ordemParaFechar) return;
+  
     try {
+      const dataFechamento = new Date().toISOString().split('T')[0];
+  
+      // Atualiza o status da OS
       await api.put(`/ordens-servico/${ordemParaFechar.id}/`, {
         status: 'finalizada',
         forma_pagamento: formaPagamento,
-        data_fechamento: new Date().toISOString()
+        data_fechamento: dataFechamento
       });
+  
+      // Busca os serviços vinculados à OS
+      const resServicos = await api.get(`/servicos-da-os/${ordemParaFechar.id}/`);
+      const valorTotal = resServicos.data.reduce((acc, s) => acc + Number(s.valor), 0);
+  
+      // Cria o lançamento no caixa
+      await api.post('/caixa/', {
+        data: dataFechamento,
+        tipo: 'entrada',
+        origem: `OS #${ordemParaFechar.id}`,
+        descricao: `${ordemParaFechar.veiculo?.placa || ''} ${ordemParaFechar.cliente?.nome || ''}`,
+        categoria: 'serviços',
+        valor: valorTotal
+      });
+  
       setFecharAberto(false);
       setOrdemParaFechar(null);
       carregarOrdens();
-    } catch {
+    } catch (err) {
       alert('Erro ao fechar a ordem de serviço.');
+      console.error(err);
     }
   };
+  
 
   const excluirOrdem = async (id) => {
     if (!window.confirm('Deseja realmente excluir esta ordem de serviço?')) return;
@@ -251,3 +288,5 @@ function OrdensServico() {
 }
 
 export default OrdensServico;
+
+
