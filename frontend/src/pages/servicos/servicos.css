@@ -42,7 +42,7 @@
   color: white;
 }
 
-.tabela-servicos-lista {
+/* .tabela-servicos-lista {
   width: 100%;
   border-collapse: collapse;
   background-color: white;
@@ -95,7 +95,7 @@
   max-width: 300px;
   border: 1px solid #ccc;
   border-radius: 6px;
-}
+} */
 
 .form-overlay {
   position: fixed;

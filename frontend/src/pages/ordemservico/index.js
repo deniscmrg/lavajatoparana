@@ -76,21 +76,6 @@ function OrdensServico() {
     setFecharAberto(true);
   };
 
-  // const fecharOrdem = async (formaPagamento) => {
-  //   if (!ordemParaFechar) return;
-  //   try {
-  //     await api.put(`/ordens-servico/${ordemParaFechar.id}/`, {
-  //       status: 'finalizada',
-  //       forma_pagamento: formaPagamento,
-  //       data_fechamento: new Date().toISOString()
-  //     });
-  //     setFecharAberto(false);
-  //     setOrdemParaFechar(null);
-  //     carregarOrdens();
-  //   } catch {
-  //     alert('Erro ao fechar a ordem de serviço.');
-  //   }
-  // };
 
   const fecharOrdem = async (formaPagamento) => {
     if (!ordemParaFechar) return;
@@ -109,15 +94,17 @@ function OrdensServico() {
       const resServicos = await api.get(`/servicos-da-os/${ordemParaFechar.id}/`);
       const valorTotal = resServicos.data.reduce((acc, s) => acc + Number(s.valor), 0);
   
-      // Cria o lançamento no caixa
-      await api.post('/caixa/', {
-        data: dataFechamento,
-        tipo: 'entrada',
-        origem: `OS #${ordemParaFechar.id}`,
-        descricao: `${ordemParaFechar.veiculo?.placa || ''} ${ordemParaFechar.cliente?.nome || ''}`,
-        categoria: 'serviços',
-        valor: valorTotal
-      });
+      // Cria o lançamento no caixa apenas se a forma de pagamento for diferente de "Faturar"
+      if (formaPagamento.toLowerCase() !== 'faturar') {
+        await api.post('/caixa/', {
+          data: dataFechamento,
+          tipo: 'entrada',
+          origem: `OS #${ordemParaFechar.id}`,
+          descricao: `${ordemParaFechar.veiculo?.placa || ''} ${ordemParaFechar.cliente?.nome || ''}`,
+          categoria: 'serviços',
+          valor: valorTotal
+        });
+      }
   
       setFecharAberto(false);
       setOrdemParaFechar(null);
@@ -127,6 +114,7 @@ function OrdensServico() {
       console.error(err);
     }
   };
+  
   
 
   const excluirOrdem = async (id) => {
@@ -191,56 +179,58 @@ function OrdensServico() {
         onChange={e => setFiltro(e.target.value)}
       />
 
-      <table className="tabela">
-        <thead>
-          <tr>
-            <th onClick={() => toggleOrdenacao('id')} style={{ cursor: 'pointer' }}>ID {iconeOrdenacao('id')}</th>
-            <th onClick={() => toggleOrdenacao('data')} style={{ cursor: 'pointer' }}>Entrada {iconeOrdenacao('data')}</th>
-            <th onClick={() => toggleOrdenacao('cliente')} style={{ cursor: 'pointer' }}>Cliente {iconeOrdenacao('cliente')}</th>
-            <th onClick={() => toggleOrdenacao('placa')} style={{ cursor: 'pointer' }}>Placa {iconeOrdenacao('placa')}</th>
-            <th onClick={() => toggleOrdenacao('status')} style={{ cursor: 'pointer' }}>Status {iconeOrdenacao('status')}</th>
-            <th onClick={() => toggleOrdenacao('forma_pagamento')} style={{ cursor: 'pointer' }}>Pagamento {iconeOrdenacao('forma_pagamento')}</th>
-            <th>Saida</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {ordensFiltradas.map(os => (
-            <tr key={os.id}>
-              <td>{os.id}</td>
-              <td>{formatarDataHora(os.data)}</td>
-              {/* <td>{new Date(os.data).toLocaleDateString()}</td> */}
-              <td>{os.cliente?.nome || ''}</td>
-              <td>{os.veiculo?.placa || ''}</td>
-              <td>{os.status}</td>
-              <td>{os.forma_pagamento}</td>
-              <td>{os.data_fechamento ? formatarDataHora(os.data_fechamento) : ''}</td>
-              {/* <td>{os.data_fechamento ? new Date(os.data_fechamento).toLocaleString() : ''}</td> */}
-              <td>
-                <button className="icon-button editar" onClick={() => abrirForm(os)} title="Editar">
-                  <Edit size={18} />
-                </button>
-                <button 
-                  className={`icon-button excluir ${os.status === 'finalizada' ? 'desativado' : ''}`}
-                  onClick={() => excluirOrdem(os.id)} 
-                  title="Excluir"
-                  disabled={os.status === 'finalizada'}
-                >
-                  <Trash2 size={18} />
-                </button>
-                <button
-                  className={`icon-button fechar ${os.status === 'finalizada' ? 'desativado' : ''}`}
-                  onClick={() => abrirFechamento(os)}
-                  title="Fechar"
-                  disabled={os.status === 'finalizada'} // ← desabilita o botão se a OS estiver finalizada
-                >
-                  <CreditCard size={18} />
-              </button>
-              </td>
+    <div className='tabela-scroll'>
+      <table className='tabela'>
+          <thead>
+            <tr>
+              <th onClick={() => toggleOrdenacao('id')} style={{ cursor: 'pointer' }}>ID {iconeOrdenacao('id')}</th>
+              <th onClick={() => toggleOrdenacao('data')} style={{ cursor: 'pointer' }}>Entrada {iconeOrdenacao('data')}</th>
+              <th onClick={() => toggleOrdenacao('cliente')} style={{ cursor: 'pointer' }}>Cliente {iconeOrdenacao('cliente')}</th>
+              <th onClick={() => toggleOrdenacao('placa')} style={{ cursor: 'pointer' }}>Placa {iconeOrdenacao('placa')}</th>
+              <th onClick={() => toggleOrdenacao('status')} style={{ cursor: 'pointer' }}>Status {iconeOrdenacao('status')}</th>
+              <th onClick={() => toggleOrdenacao('forma_pagamento')} style={{ cursor: 'pointer' }}>Pagamento {iconeOrdenacao('forma_pagamento')}</th>
+              <th>Saida</th>
+              <th>Ações</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {ordensFiltradas.map(os => (
+              <tr key={os.id}>
+                <td>{os.id}</td>
+                <td>{formatarDataHora(os.data)}</td>
+                {/* <td>{new Date(os.data).toLocaleDateString()}</td> */}
+                <td>{os.cliente?.nome || ''}</td>
+                <td>{os.veiculo?.placa || ''}</td>
+                <td>{os.status}</td>
+                <td>{os.forma_pagamento}</td>
+                <td>{os.data_fechamento ? formatarDataHora(os.data_fechamento) : ''}</td>
+                {/* <td>{os.data_fechamento ? new Date(os.data_fechamento).toLocaleString() : ''}</td> */}
+                <td>
+                  <button className="icon-button editar" onClick={() => abrirForm(os)} title="Editar">
+                    <Edit size={18} />
+                  </button>
+                  <button 
+                    className={`icon-button excluir ${os.status === 'finalizada' ? 'desativado' : ''}`}
+                    onClick={() => excluirOrdem(os.id)} 
+                    title="Excluir"
+                    disabled={os.status === 'finalizada'}
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                  <button
+                    className={`icon-button fechar ${os.status === 'finalizada' ? 'desativado' : ''}`}
+                    onClick={() => abrirFechamento(os)}
+                    title="Fechar"
+                    disabled={os.status === 'finalizada'} // ← desabilita o botão se a OS estiver finalizada
+                  >
+                    <CreditCard size={18} />
+                </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <ModalPlaca
         isOpen={modalPlacaAberto}
@@ -276,8 +266,12 @@ function OrdensServico() {
         <CadastroClienteVeiculo
           placa={placaBusca}
           onClose={() => setCadastroAberto(false)}
-          onConfirm={veiculo => {
-            setOrdemParaEditar({ veiculo });
+          // onConfirm={veiculo => {
+          //   setOrdemParaEditar({ veiculo });
+          //   setCadastroAberto(false);
+          //   setFormAberto(true);
+          onConfirm={dados => {
+            setOrdemParaEditar(dados);
             setCadastroAberto(false);
             setFormAberto(true);
           }}

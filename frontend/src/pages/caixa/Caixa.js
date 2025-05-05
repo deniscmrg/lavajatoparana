@@ -79,41 +79,43 @@ function Caixa() {
         
       </div>
 
-      <table className="tabela-caixa">
-        <thead>
-          <tr>
-            <th onClick={() => handleSort('data')}>Data{renderSortArrow('data')}</th>
-            <th onClick={() => handleSort('origem')}>Origem{renderSortArrow('origem')}</th>
-            <th onClick={() => handleSort('descricao')}>Descrição{renderSortArrow('descricao')}</th>
-            <th onClick={() => handleSort('categoria')}>Categoria{renderSortArrow('categoria')}</th>
-            <th onClick={() => handleSort('tipo')}>Tipo{renderSortArrow('tipo')}</th>
-            <th onClick={() => handleSort('valor')}>Valor{renderSortArrow('valor')}</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {lancamentosFiltrados.map((l) => (
-            <tr key={l.id}>
-              <td>{l.data}</td>
-              <td>{l.origem}</td>
-              <td>{l.descricao}</td>
-              <td>{l.categoria}</td>
-              <td>{l.tipo}</td>
-              <td className={l.tipo === 'saida' ? 'valor-saida' : ''}>
-                R$ {parseFloat(l.valor).toFixed(2)}
-              </td>
-              <td>
-                <button className="icon-button editar" onClick={() => { setEditData(l); setShowForm(true); }} title="Editar">
-                  <Edit size={18} />
-                </button>
-                <button className="icon-button excluir" onClick={() => handleDelete(l.id)} title="Excluir">
-                  <Trash2 size={18} />
-                </button>
-            </td>
+      <div className='tabela-scroll'>
+        <table className='tabela'>
+          <thead>
+            <tr>
+              <th onClick={() => handleSort('data')}>Data{renderSortArrow('data')}</th>
+              <th onClick={() => handleSort('origem')}>Origem{renderSortArrow('origem')}</th>
+              <th onClick={() => handleSort('descricao')}>Descrição{renderSortArrow('descricao')}</th>
+              <th onClick={() => handleSort('categoria')}>Categoria{renderSortArrow('categoria')}</th>
+              <th onClick={() => handleSort('tipo')}>Tipo{renderSortArrow('tipo')}</th>
+              <th onClick={() => handleSort('valor')}>Valor{renderSortArrow('valor')}</th>
+              <th>Ações</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {lancamentosFiltrados.map((l) => (
+              <tr key={l.id}>
+                <td>{l.data}</td>
+                <td>{l.origem}</td>
+                <td>{l.descricao}</td>
+                <td>{l.categoria}</td>
+                <td>{l.tipo}</td>
+                <td className={l.tipo === 'saida' ? 'valor-saida' : ''}>
+                  R$ {parseFloat(l.valor).toFixed(2)}
+                </td>
+                <td>
+                  <button className="icon-button editar" onClick={() => { setEditData(l); setShowForm(true); }} title="Editar">
+                    <Edit size={18} />
+                  </button>
+                  <button className="icon-button excluir" onClick={() => handleDelete(l.id)} title="Excluir">
+                    <Trash2 size={18} />
+                  </button>
+              </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     {showForm && <CaixaForm onClose={() => { setShowForm(false); fetchLancamentos(); }} editData={editData} />}
     </div>
   );

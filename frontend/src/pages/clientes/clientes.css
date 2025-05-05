@@ -42,46 +42,7 @@
   color: white;
 }
 
-.tabela-clientes {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-.tabela-clientes th,
-.tabela-clientes td {
-  height: 30px;
-  padding: 10px 16px;
-  text-align: left;
-  border-bottom: 1px solid #eee;
-}
-
-.tabela-clientes tr {
-  height: 10px;
-}
-
-.tabela-clientes th {
-  padding: 8px;
-  background-color: #2B9FAE;
-  color: white;
-}
-
-.tabela-clientes th:hover {
-  background-color: #cef0f4;
-  color: #2B9FAE;
-}
-
-.tabela-clientes th.sortable {
-  cursor: pointer;
-}
-
-.tabela-clientes tr:hover {
-  background-color: #f1f1f1;
-}
-
+/*-- FILTROS */
 .filtro-clientes {
   margin: 1rem 0;
 }

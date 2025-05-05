@@ -36,23 +36,6 @@ class Servico(models.Model):
         return self.descricao
 
 
-# class OrdemDeServico(models.Model):
-#     STATUS_CHOICES = [
-#         ('aberta', 'Aberta'),
-#         ('finalizada', 'Finalizada'),
-#         ('cancelada', 'Cancelada'),
-#     ]
-
-#     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
-#     data = models.DateTimeField(auto_now_add=True)
-#     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='aberta')
-#     operador = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-#     forma_pagamento = models.CharField(max_length=50)
-#     veiculo = models.ForeignKey(Veiculo, on_delete=models.CASCADE)
-
-#     def __str__(self):
-#         return f'OS {self.id} - {self.cliente.nome}'
-
 from django.db import models
 from django.contrib.auth.models import User
 from .models import Cliente, Veiculo  # ajuste o import conforme a estrutura do seu projeto
@@ -68,7 +51,7 @@ class OrdemDeServico(models.Model):
     data = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='aberta')
     operador = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    forma_pagamento = models.CharField(max_length=50)
+    forma_pagamento = models.CharField(max_length=50, null=True, blank=True)
     veiculo = models.ForeignKey(Veiculo, on_delete=models.CASCADE)
     data_fechamento = models.DateTimeField(null=True, blank=True)  # <-- CAMPO NOVO
 
@@ -84,13 +67,38 @@ class ServicoOrdemServico(models.Model):
 
 
 class Fatura(models.Model):
-    ordem_servico = models.ForeignKey(OrdemDeServico, on_delete=models.CASCADE)
-    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    cliente = models.ForeignKey('Cliente', on_delete=models.CASCADE)
     data_vencimento = models.DateField()
-    competencia = models.CharField(max_length=7)  # ex: "03/2025"
+    data_pagamento = models.DateField(null=True, blank=True)
+    competencia = models.CharField(max_length=6,null=True, blank=True)
 
     def __str__(self):
-        return f'Fatura OS {self.ordem_servico.id}'
+        return f'Fatura #{self.id} - {self.cliente.nome}'
+
+    @property
+    def status(self):
+        if self.data_pagamento:
+            return 'Paga'
+        elif date.today() > self.data_vencimento:
+            return 'Vencida'
+        return 'Aberta'
+
+    @property
+    def valor_total(self):
+        total = sum(
+            os.ordem_servico.servicoordemservico_set.aggregate(
+                models.Sum(models.F('quantidade') * models.F('valor'), output_field=models.DecimalField())
+            )["quantidade__sum"] or 0
+            for os in self.ordens.all()
+        )
+        return total
+
+class FaturaOrdemServico(models.Model):
+    fatura = models.ForeignKey(Fatura, on_delete=models.CASCADE, related_name='ordens')
+    ordem_servico = models.ForeignKey(OrdemDeServico, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'Fatura {self.fatura.id} - OS {self.ordem_servico.id}'
 
 
 class Caixa(models.Model):

@@ -92,35 +92,37 @@ function Clientes() {
         />
       </div>
 
-      <table className="tabela-clientes">
-        <thead>
-          <tr>
-            <th onClick={() => handleSort('nome')}>Nome{renderSortArrow('nome')}</th>
-            <th onClick={() => handleSort('email')}>Email{renderSortArrow('email')}</th>
-            <th onClick={() => handleSort('celular')}>Celular{renderSortArrow('celular')}</th>
-            <th onClick={() => handleSort('tipo')}>Tipo{renderSortArrow('tipo')}</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {clientesFiltrados.map((c) => (
-            <tr key={c.id}>
-              <td>{c.nome}</td>
-              <td>{c.email}</td>
-              <td>{c.celular}</td>
-              <td>{c.tipo}</td>
-              <td>
-                <button className="icon-button editar" onClick={() => handleEdit(c)} title="Editar">
-                  <Edit size={18} />
-                </button>
-                <button className="icon-button excluir" onClick={() => handleDelete(c.id)} title="Excluir">
-                  <Trash2 size={18} />
-                </button>
-              </td>
+      <div className='tabela-scroll'>
+        <table className='tabela'>
+          <thead>
+            <tr>
+              <th onClick={() => handleSort('nome')}>Nome{renderSortArrow('nome')}</th>
+              <th onClick={() => handleSort('email')}>Email{renderSortArrow('email')}</th>
+              <th onClick={() => handleSort('celular')}>Celular{renderSortArrow('celular')}</th>
+              <th onClick={() => handleSort('tipo')}>Tipo{renderSortArrow('tipo')}</th>
+              <th>Ações</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {clientesFiltrados.map((c) => (
+              <tr key={c.id}>
+                <td>{c.nome}</td>
+                <td>{c.email}</td>
+                <td>{c.celular}</td>
+                <td>{c.tipo}</td>
+                <td>
+                  <button className="icon-button editar" onClick={() => handleEdit(c)} title="Editar">
+                    <Edit size={18} />
+                  </button>
+                  <button className="icon-button excluir" onClick={() => handleDelete(c.id)} title="Excluir">
+                    <Trash2 size={18} />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>      
 
       {showForm && (
         <ClienteForm onClose={handleCloseForm} editData={editData} />

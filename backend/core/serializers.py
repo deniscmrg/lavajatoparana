@@ -63,6 +63,8 @@ class OrdemDeServicoSerializer(serializers.ModelSerializer):
 
 
 class FaturaSerializer(serializers.ModelSerializer):
+    cliente_nome = serializers.CharField(source='cliente.nome', read_only=True)
+    
     class Meta:
         model = Fatura
         fields = '__all__'

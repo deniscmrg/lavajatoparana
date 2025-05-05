@@ -1,0 +1,27 @@
+.pagina {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .topo-listagem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .btn-primary {
+    background-color: #2B9FAE;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  
+  .btn-primary:hover {
+    background-color: #248392;
+  }
+  

@@ -9,9 +9,9 @@ const menuItems = [
   { name: 'Clientes', path: '/clientes' },
   { name: 'Veiculos', path: '/veiculos' },
   { name: 'Serviços', path: '/servicos' },
+  { name: 'Faturas', path: '/faturas' },
   { name: 'Caixa', path: '/caixa' },
   { name: 'Relatorios', path: '/relatorios' },
-  { name: 'Usuarios', path: '/usuarios' }
 
 ];
 
@@ -19,7 +19,6 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <img src={logo} alt="Logo" className="sidebar-logo" />
-
       <nav>
         {menuItems.map((item, index) => (
           <NavLink

@@ -76,7 +76,15 @@ const OrdemServicoForm = ({ editData, onClose, atualizarOrdens }) => {
     console.log('[DEBUG] editData ID:', editData.id);
     console.log('[DEBUG] editData placa:', editData.placa);
     if (!editData) return;
+
+    if (typeof editData === 'string') {
+      buscarPorPlaca(editData);
+      return;
+    }
+
+    //edição de uma os existente
     if (editData.id) {
+      console.log("achou o editDAta.id e entrou no if")
       axios.get(`/ordens-servico/${editData.id}/`).then(res => {
         const d = res.data;
         
@@ -111,8 +119,11 @@ const OrdemServicoForm = ({ editData, onClose, atualizarOrdens }) => {
         });
       });
     } 
+    //deveria entrar aqui pra trazer os dados de um novo cadastro de veiculo e proprietario
+    
     // else if (editData.placa && !editData.id) {
-      else if (editData.placa && !editData.id) {
+    else if (editData.placa && !editData.id) {
+      console.log('vamos ver se entra aqui no ELSE: ',editData.placa)
       // buscarPorPlaca(editData.placa);
 
       console.log('entrou para carregar os dados na tela', editData.placa)

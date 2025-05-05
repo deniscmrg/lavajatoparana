@@ -18,39 +18,6 @@
   margin: 0;
 }
 
-.tabela-caixa {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-.tabela-caixa th,
-.tabela-caixa td {
-  height: 30px;
-  padding: 10px 16px;
-  text-align: left;
-  border-bottom: 1px solid #eee;
-}
-
-.tabela-caixa th {
-  padding: 8px;
-  background-color: #2B9FAE;
-  color: white;
-}
-
-.tabela-caixa th:hover {
-  background-color: #cef0f4;
-  color: #2B9FAE;
-  cursor: pointer;
-}
-
-.tabela-caixa tr:hover {
-  background-color: #f1f1f1;
-}
-
 .filtro-caixa {
   margin: 1rem 0;
 }

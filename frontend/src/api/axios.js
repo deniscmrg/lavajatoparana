@@ -12,7 +12,8 @@ api.interceptors.request.use((config) => {
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
-    // console.log('[AXIOS] Header Authorization foi setado!');
+    //console.log('[AXIOS] Header Authorization foi setado!');
+    //console.log(localStorage.getItem('accessToken'))
   } else {
     console.warn('[AXIOS] Nenhum token encontrado!');
   }

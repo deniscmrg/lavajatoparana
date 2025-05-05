@@ -9,6 +9,8 @@ import Veiculos from './pages/veiculos';
 import Clientes from './pages/clientes';
 import OrdensServico from './pages/ordemservico';
 import Caixa from './pages/caixa/Caixa';
+import './global/global.css';
+import Faturas from './pages/faturas';
 
 function App() {
   return (
@@ -29,6 +31,7 @@ function App() {
             <Route path="clientes" element={<Clientes />} />
             <Route path="veiculos" element={<Veiculos />} />
             <Route path="caixa" element={<Caixa />} />
+            <Route path="faturas" element={<Faturas />} />
           </Route>
         </Route>
       </Routes>

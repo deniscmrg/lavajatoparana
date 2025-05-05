@@ -29,6 +29,8 @@ SECRET_KEY = 'django-insecure-bgooi3k!8exw)6csj-qh=ai55pi93bz)d9#mp$@_jrz^9h=w6e
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+APPEND_SLASH = True
+
 #ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ['*']
 
@@ -80,28 +82,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'parana',             # nome do seu banco
-#         'USER': 'root',               # ou o usuário que você criou
-#         'PASSWORD': 'root',
-#         #'PASSWORD': 'D@nte512',       # a senha que você definiu
-#         'HOST': 'localhost',          # ou 'localhost'
-#         'PORT': '3306',               # ou '3307' se você tiver trocado
-#     }
-   
-#             }
 
 USE_POSTGRES = config('USE_POSTGRES', default=False, cast=bool)
 

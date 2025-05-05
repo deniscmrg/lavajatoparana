@@ -8,6 +8,7 @@ const ModalPlaca = ({ isOpen, onClose, onConfirm }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log("a bosta da plcaca do modal placa:", placa)
     onConfirm(placa.trim().toUpperCase());
   };
 

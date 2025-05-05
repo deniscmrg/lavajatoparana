@@ -95,34 +95,35 @@ function Servicos() {
         />
       </div>
 
-      <table className="tabela-servicos-lista">
-        <thead>
-          <tr>
-            <th className="sortable" onClick={() => handleSort('descricao')}>Descrição{renderSortArrow('descricao')}</th>
-            <th className="sortable" onClick={() => handleSort('valor_unitario')}>Valor Unitário{renderSortArrow('valor_unitario')}</th>
-            <th className="sortable" onClick={() => handleSort('status')}>Status{renderSortArrow('status')}</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {servicosFiltrados.map((servico) => (
-            <tr key={servico.id}>
-              <td>{servico.descricao}</td>
-              <td>R$ {Number(servico.valor_unitario).toFixed(2)}</td>
-              <td>{servico.status ? 'Ativo' : 'Inativo'}</td>
-              <td>
-                <button className="icon-button editar" onClick={() => handleEdit(servico)} title="Editar">
-                  <Edit size={18} />
-                </button>
-                <button className="icon-button excluir" onClick={() => handleDelete(servico.id)} title="Excluir">
-                  <Trash2 size={18} />
-                </button>
-              </td>
+      <div className='tabela-scroll'>
+        <table className='tabela'>
+          <thead>
+            <tr>
+              <th className="sortable" onClick={() => handleSort('descricao')}>Descrição{renderSortArrow('descricao')}</th>
+              <th className="sortable" onClick={() => handleSort('valor_unitario')}>Valor Unitário{renderSortArrow('valor_unitario')}</th>
+              <th className="sortable" onClick={() => handleSort('status')}>Status{renderSortArrow('status')}</th>
+              <th>Ações</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-
+          </thead>
+          <tbody>
+            {servicosFiltrados.map((servico) => (
+              <tr key={servico.id}>
+                <td>{servico.descricao}</td>
+                <td>R$ {Number(servico.valor_unitario).toFixed(2)}</td>
+                <td>{servico.status ? 'Ativo' : 'Inativo'}</td>
+                <td>
+                  <button className="icon-button editar" onClick={() => handleEdit(servico)} title="Editar">
+                    <Edit size={18} />
+                  </button>
+                  <button className="icon-button excluir" onClick={() => handleDelete(servico.id)} title="Excluir">
+                    <Trash2 size={18} />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>      
       {showForm && (
         <ServicoForm onClose={handleCloseForm} editData={editData} />
       )}
