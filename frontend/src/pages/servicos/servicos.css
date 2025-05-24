@@ -42,60 +42,15 @@
   color: white;
 }
 
-/* .tabela-servicos-lista {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-.tabela-servicos-lista th,
-.tabela-servicos-lista td {
-  height: 30px;
-  padding: 10px 16px;
-  text-align: left;
-  border-bottom: 1px solid #eee;
-}
-
-.tabela-servicos-lista tr {
-  height: 10px;
-}
-
-.tabela-servicos-lista th {
-  padding: 8px;
-  background-color: #2B9FAE;
-  color: white;
-  border-bottom: 1px solid #2B9FAE;
-  border-right: none;
-  border-left: none;
-}
-
-.tabela-servicos-lista th:hover {
-  background-color: #cef0f4;
-  color: #2B9FAE;
-}
-
-.tabela-servicos-lista th.sortable {
-  cursor: pointer;
-}
-
-.tabela-servicos-lista tr:hover {
-  background-color: #f1f1f1;
-}
-
-.filtro-servicos {
-  margin: 1rem 0;
-}
-
 .filtro-servicos input {
   padding: 0.5rem;
   width: 100%;
   max-width: 300px;
+  height: 30px;
   border: 1px solid #ccc;
   border-radius: 6px;
-} */
+  margin-bottom: 10px;
+} 
 
 .form-overlay {
   position: fixed;

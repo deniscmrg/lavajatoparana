@@ -13,6 +13,11 @@
   margin-bottom: 20px;
 }
 
+.header-botoes {
+  display: flex;
+  gap: 10px; /* ajuste conforme o espaço desejado */
+}
+
 .header-caixa h2 {
   color: #2B9FAE;
   margin: 0;
@@ -50,4 +55,52 @@
 .valor-saida {
   color: #d9534f;
   /* font-weight: bold; */
+}
+
+.filtros-avancados {
+  display: flex;
+  gap: 2rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+
+.filtros-avancados button {
+  margin-right: 0.1rem;
+  padding: 6px 8px;
+  border: none;
+  background-color: #dee6e7;
+  color: #18616b;
+  /*font-weight: bold;*/
+  /*border-radius: 6px;*/
+  cursor: pointer;
+}
+.filtros-avancados button:hover {
+  background-color: #2B9FAE;
+  color: white;
+}
+
+.filtros-avancados button.ativo {
+  background-color: #2B9FAE;
+  color: white;
+}
+
+.filtro-datas-personalizadas {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+}
+.filtro-datas-personalizadas input {
+  padding: 4px;
+}
+
+.linha-filtro-texto {
+  margin-bottom: 10px;
+}
+
+.linha-filtros-opcoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
 }

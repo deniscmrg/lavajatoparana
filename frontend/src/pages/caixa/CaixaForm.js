@@ -9,7 +9,8 @@ function CaixaForm({ onClose, editData }) {
   const [tipo, setTipo] = useState('');
   const [origem, setOrigem] = useState('Lançamento Manual');
   const [valor, setValor] = useState('');
-  const [data, setData] = useState('2025-04-20');
+  const [data, setData] = useState('');
+  const [formaPagamento, setFormaPagamento] = useState(editData?.forma_pagamento || '');
 
   useEffect(() => {
     if (editData) {
@@ -17,6 +18,7 @@ function CaixaForm({ onClose, editData }) {
       setCategoria(editData.categoria || '');
       setOrigem(editData.origem || '');
       setTipo(editData.tipo || '');
+      setFormaPagamento(editData.forma_pagamento || '');
       setValor(editData.valor || '');
       setData(editData.data || '');
     }
@@ -24,7 +26,7 @@ function CaixaForm({ onClose, editData }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const payload = { descricao, categoria, tipo, valor, data, origem };
+    const payload = { descricao, categoria, tipo, valor, data, origem, forma_pagamento: formaPagamento,  };
     try {
       if (editData) {
         await api.put(`caixa/${editData.id}/`, payload);
@@ -54,6 +56,15 @@ function CaixaForm({ onClose, editData }) {
             <option value="">Selecione</option>
             <option value="entrada">Entrada</option>
             <option value="saida">Saída</option>
+          </select>
+
+          <label>Forma de Pagamento:</label>
+          <select value={formaPagamento} onChange={(e) => setFormaPagamento(e.target.value)} required>
+            <option value="">Selecione</option>
+            <option value="dinheiro">Dinheiro</option>
+            <option value="pix">PIX</option>
+            <option value="debito">Débito</option>
+            <option value="credito">Crédito</option>
           </select>
 
           <label>Valor:</label>

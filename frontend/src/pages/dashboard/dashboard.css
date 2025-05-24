@@ -1,13 +1,112 @@
-.dashboard-container {
-    display: flex;
-  }
-  
-  .main-content {
-    margin-left: 220px;
-    width: calc(100% - 220px);
-  }
-  
-  .content {
-    padding: 20px;
-  }
-  
+/* .pagina-dashboard {
+  padding: 20px;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+} */
+
+.pagina-dashboard {
+  height: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+}
+
+.pagina-dashboard h2 {
+  color: #2B9FAE;
+  margin-bottom: 1rem;
+}
+
+.filtros-dashboard {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filtros-dashboard select {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.grafico-container {
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.painel-dashboard {
+  display: flex;
+  gap: 20px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+.painel {
+  flex: 1;
+  min-width: 300px;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-height: 350px;
+  display: flex;
+  flex-direction: column;
+}
+
+.painel h3 {
+  margin-bottom: 10px;
+  color: #2B9FAE;
+}
+
+.painel-scroll {
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.linha {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  padding: 6px 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.painel-tabela {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.painel-tabela th {
+  text-align: left;
+  background-color: #2B9FAE;
+  color: white;
+  padding: 8px;
+  position: sticky;
+  top: 0;
+}
+
+.painel-tabela td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #eee;
+  background-color: white;
+}
+
+.filtro-datas-personalizadas {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.filtro-datas-personalizadas input[type="date"] {
+  padding: 4px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}

@@ -7,6 +7,11 @@
     max-width: 900px;
     width: 100%;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+    max-height: 95vh;
+    overflow-y: auto;
+    padding: 2rem;
+
   }
   
   .os-form h3 {
@@ -14,13 +19,45 @@
     color: #2B9FAE;
   }
 
-  .read-only{
-    border: 0px tr #ffffff;
-    background-color: #f7efef;
-    font-weight: bold;
-  }
-  
+ 
   .linha {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  margin-bottom: 1rem;
+  }
+
+  .linha label {
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+
+  .linha > div {
+    flex: 1;
+    min-width: 0; /* evita quebra desnecessária */
+  }
+
+  .linha input,
+  .linha select {
+    width: 100%;
+    padding: 4px 6px;
+    font-size: 0.85rem;
+  }
+
+  .operador-input{
+    height: 32px;
+    width: 100%;
+    padding: 4px 6px;
+    font-size: 0.85rem;
+  }
+
+  .read-only {
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+  }
+
+
+  /* .linha {
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
@@ -30,13 +67,8 @@
   .linha > div {
     flex: 1;
     min-width: 200px;
-    display: flex;
+    display: flex; 
     flex-direction: column;
-  }
-  
-  .linha label {
-    font-weight: bold;
-    margin-bottom: 4px;
   }
   
   .linha input,
@@ -44,7 +76,14 @@
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 8px;
-  }
+  } 
+
+    .read-only{
+    border: 0px tr #ffffff;
+    background-color: #f7efef;
+    font-weight: bold;
+  }  
+  */
   
   .tabela-servicos {
     width: 100%;

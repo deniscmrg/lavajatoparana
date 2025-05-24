@@ -5,6 +5,8 @@ from .models import Cliente, Veiculo, Servico, OrdemDeServico, ServicoOrdemServi
 from rest_framework import serializers
 from .models import Veiculo
 
+from datetime import date
+
 class VeiculoSerializer(serializers.ModelSerializer):
     cliente_nome = serializers.CharField(source='cliente.nome', read_only=True)
     class Meta:
@@ -62,12 +64,41 @@ class OrdemDeServicoSerializer(serializers.ModelSerializer):
         return ServicoOrdemServicoSerializer(servicos, many=True).data
 
 
+
+class OrdemResumoSerializer(serializers.ModelSerializer):
+    veiculo = serializers.CharField(source='veiculo.placa')
+    valor_total = serializers.SerializerMethodField()
+
+    class Meta:
+        model = OrdemDeServico
+        fields = ['id', 'data', 'veiculo', 'valor_total']
+
+    def get_valor_total(self, obj):
+        from django.db.models import Sum
+        return (
+            ServicoOrdemServico.objects
+            .filter(ordem_servico=obj)
+            .aggregate(Sum('valor'))['valor__sum'] or 0
+        )
+
+    # Função auxiliar, você pode usar aggregate se preferir:
+    def aggregate_total(self):
+        from django.db.models import Sum
+        return ServicoOrdemServico.objects.filter(ordem_servico=obj).aggregate(Sum('valor'))['valor__sum'] or 0
+
+
 class FaturaSerializer(serializers.ModelSerializer):
     cliente_nome = serializers.CharField(source='cliente.nome', read_only=True)
-    
+    ordens = serializers.SerializerMethodField()
+
     class Meta:
         model = Fatura
-        fields = '__all__'
+        fields = ['id', 'cliente_nome', 'competencia', 'data_vencimento', 'data_pagamento', 'status', 'ordens', 'forma_pagamento']
+
+    def get_ordens(self, obj):
+        # Pegando as ordens de serviço ligadas via FaturaOrdemServico
+        ordens = OrdemDeServico.objects.filter(faturaordemservico__fatura=obj)
+        return OrdemResumoSerializer(ordens, many=True).data
 
 
 class CaixaSerializer(serializers.ModelSerializer):

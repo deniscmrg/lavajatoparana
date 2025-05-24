@@ -91,7 +91,8 @@ function Veiculos() {
           onChange={(e) => setFiltro(e.target.value)}
         />
       </div>
-
+      
+      <div className='tabela-scroll'>
       <table className="tabela-veiculos">
         <thead>
           <tr>
@@ -121,11 +122,13 @@ function Veiculos() {
           ))}
         </tbody>
       </table>
+      </div>
 
       {showForm && (
         <VeiculoForm onClose={handleCloseForm} editData={editData} />
       )}
     </div>
+    
   );
 }
 

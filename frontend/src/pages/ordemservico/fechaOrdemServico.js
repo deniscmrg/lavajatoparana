@@ -26,7 +26,9 @@ const FechaOrdemServico = ({ ordem, onClose, onConfirm }) => {
               <option value="pix">Pix</option>
               <option value="debito">Cartão de Débito</option>
               <option value="credito">Cartão de Crédito</option>
-              <option value="faturar">Faturar</option>
+              {ordem?.cliente?.tipo === 'lojista' && (
+                <option value="faturar">Faturar</option>
+              )}
             </select>
           </div>
 

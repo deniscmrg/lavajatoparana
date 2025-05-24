@@ -63,6 +63,15 @@ function Clientes() {
     return sortDirection === 'asc' ? ' ↑' : ' ↓';
   };
 
+
+  const formatarCelularExibicao = (numero) => {
+      const numeros = numero.replace(/\D/g, '');
+      if (numeros.length <= 10) {
+        return numeros.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+      }
+      return numeros.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+    };
+
   const clientesFiltrados = clientes
     .filter((c) =>
       c.nome.toLowerCase().includes(filtro.toLowerCase()) ||
@@ -92,7 +101,7 @@ function Clientes() {
         />
       </div>
 
-      <div className='tabela-scroll'>
+      <div className='tabela-scroll'> 
         <table className='tabela'>
           <thead>
             <tr>
@@ -108,7 +117,7 @@ function Clientes() {
               <tr key={c.id}>
                 <td>{c.nome}</td>
                 <td>{c.email}</td>
-                <td>{c.celular}</td>
+                <td>{formatarCelularExibicao(c.celular)}</td>
                 <td>{c.tipo}</td>
                 <td>
                   <button className="icon-button editar" onClick={() => handleEdit(c)} title="Editar">

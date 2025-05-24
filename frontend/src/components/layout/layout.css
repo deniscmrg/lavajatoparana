@@ -44,3 +44,10 @@ header {
   overflow-y: auto;
   background-color: #f9f9f9;
 }
+
+.conteudo {
+  flex: 1;
+  padding: 0;
+  overflow: hidden; /* evita rolagem geral */
+  height: 100%;
+}

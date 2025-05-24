@@ -19,6 +19,11 @@ function OrdensServico() {
   const [ordemCrescente, setOrdemCrescente] = useState(false);
   const [modalPlacaAberto, setModalPlacaAberto] = useState(false);
   const [placaBusca, setPlacaBusca] = useState('');
+  const [filtroData, setFiltroData] = useState('hoje');
+  const [filtroStatus, setFiltroStatus] = useState('todos');
+  const [dataInicio, setDataInicio] = useState('');
+  const [dataFim, setDataFim] = useState('');
+
 
   const carregarOrdens = async () => {
     try {
@@ -76,12 +81,21 @@ function OrdensServico() {
     setFecharAberto(true);
   };
 
-
   const fecharOrdem = async (formaPagamento) => {
     if (!ordemParaFechar) return;
-  
+
+    //valida se é lojista caso a forma de pagamento seja faturar
+    if (
+      formaPagamento.toLowerCase() === 'faturar' &&
+      ordemParaFechar?.cliente?.tipo !== 'lojista'
+    ) {
+      alert('Somente clientes lojistas podem usar a opção Faturar.');
+      return;
+    }
     try {
-      const dataFechamento = new Date().toISOString().split('T')[0];
+      // const dataFechamento = new Date().toISOString().split('T')[0];
+      const dataFechamento = new Date().toISOString();
+      const dataCaixa = dataFechamento.split('T')[0];  // só data
   
       // Atualiza o status da OS
       await api.put(`/ordens-servico/${ordemParaFechar.id}/`, {
@@ -97,12 +111,13 @@ function OrdensServico() {
       // Cria o lançamento no caixa apenas se a forma de pagamento for diferente de "Faturar"
       if (formaPagamento.toLowerCase() !== 'faturar') {
         await api.post('/caixa/', {
-          data: dataFechamento,
+          data: dataCaixa,
           tipo: 'entrada',
           origem: `OS #${ordemParaFechar.id}`,
           descricao: `${ordemParaFechar.veiculo?.placa || ''} ${ordemParaFechar.cliente?.nome || ''}`,
           categoria: 'serviços',
-          valor: valorTotal
+          valor: valorTotal,
+          forma_pagamento: formaPagamento
         });
       }
   
@@ -137,10 +152,38 @@ function OrdensServico() {
   };
 
   const ordensFiltradas = [...ordens]
-    .filter(os =>
-      (os.cliente?.nome?.toLowerCase() || '').includes(filtro.toLowerCase()) ||
-      (os.veiculo?.placa?.toLowerCase() || '').includes(filtro.toLowerCase())
-    )
+    
+    .filter(os => {
+        const nomeOuPlaca = (os.cliente?.nome?.toLowerCase() || '') + (os.veiculo?.placa?.toLowerCase() || '');
+        if (!nomeOuPlaca.includes(filtro.toLowerCase())) return false;
+
+        const dataEntrada = new Date(os.data);
+        const hoje = new Date();
+        const inicioSemana = new Date(); inicioSemana.setDate(hoje.getDate() - hoje.getDay() + 1);
+        const inicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+
+        if (filtroData === 'hoje' && dataEntrada.toDateString() !== hoje.toDateString()) return false;
+        if (filtroData === 'semana' && dataEntrada < inicioSemana) return false;
+        if (filtroData === 'mes' && dataEntrada < inicioMes) return false;
+        if (filtroData === 'personalizado') {
+          const ini = dataInicio ? new Date(dataInicio) : null;
+          const fim = dataFim ? new Date(dataFim) : null;
+          // if ((ini && dataEntrada < ini) || (fim && dataEntrada > fim)) return false;
+          const apenasData = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+          const dataEntradaAjustada = apenasData(dataEntrada);
+
+          if (
+            (ini && dataEntradaAjustada < apenasData(ini)) ||
+            (fim && dataEntradaAjustada > apenasData(fim))
+          ) return false;
+        }
+        
+        // 🟢 Filtro de status 
+        if (filtroStatus !== 'todos' && os.status !== filtroStatus) return false;
+
+        return true;
+      })
+
     .sort((a, b) => {
       const aVal = a[ordenarPor]?.toString().toLowerCase?.() || '';
       const bVal = b[ordenarPor]?.toString().toLowerCase?.() || '';
@@ -171,13 +214,41 @@ function OrdensServico() {
           + Nova OS
         </button>
       </div>
+      
 
-      <input
-        className="input-filtro"
-        placeholder="Filtrar por cliente ou placa..."
-        value={filtro}
-        onChange={e => setFiltro(e.target.value)}
-      />
+        <div className="filtros-avancados">
+          <input
+            className="input-filtro-os" 
+            placeholder="Filtrar por cliente ou placa..."
+            value={filtro}
+            onChange={e => setFiltro(e.target.value)}
+          />
+          <div className="filtros-data">
+            <strong>Data: </strong>
+            <div className="botoes-data">
+              <button onClick={() => setFiltroData('hoje')} className={filtroData === 'hoje' ? 'ativo' : ''}>Hoje</button>
+              <button onClick={() => setFiltroData('semana')} className={filtroData === 'semana' ? 'ativo' : ''}>Esta Semana</button>
+              <button onClick={() => setFiltroData('mes')} className={filtroData === 'mes' ? 'ativo' : ''}>Este Mês</button>
+              <button onClick={() => setFiltroData('todos')} className={filtroData === 'todos' ? 'ativo' : ''}>Todos</button>
+              <button onClick={() => setFiltroData('personalizado')} className={filtroData === 'personalizado' ? 'ativo' : ''}>Personalizado</button>
+            </div>
+
+            {filtroData === 'personalizado' && (
+              <div className="filtro-datas-personalizadas-os">
+                <label>Início: </label>
+                <input type="date" value={dataInicio} onChange={(e) => setDataInicio(e.target.value)} />
+                <label>Fim: </label>
+                <input type="date" value={dataFim} onChange={(e) => setDataFim(e.target.value)} />
+              </div>
+            )}
+          </div>
+          <div className="filtros-status">
+              <strong>Status: </strong>
+              <button onClick={() => setFiltroStatus('aberta')} className={filtroStatus === 'aberta' ? 'ativo' : ''}>Aberta</button>
+              <button onClick={() => setFiltroStatus('finalizada')} className={filtroStatus === 'finalizada' ? 'ativo' : ''}>Finalizada</button>
+              <button onClick={() => setFiltroStatus('todos')} className={filtroStatus === 'todos' ? 'ativo' : ''}>Todos</button>
+          </div>
+        </div>
 
     <div className='tabela-scroll'>
       <table className='tabela'>
@@ -209,14 +280,18 @@ function OrdensServico() {
                   <button className="icon-button editar" onClick={() => abrirForm(os)} title="Editar">
                     <Edit size={18} />
                   </button>
-                  <button 
+                  <button className="icon-button excluir" onClick={() => excluirOrdem(os.id)} title="Excluir">
+                      <Trash2 size={18} />
+                  </button>
+
+                  {/* <button 
                     className={`icon-button excluir ${os.status === 'finalizada' ? 'desativado' : ''}`}
                     onClick={() => excluirOrdem(os.id)} 
                     title="Excluir"
                     disabled={os.status === 'finalizada'}
                   >
                     <Trash2 size={18} />
-                  </button>
+                  </button> */}
                   <button
                     className={`icon-button fechar ${os.status === 'finalizada' ? 'desativado' : ''}`}
                     onClick={() => abrirFechamento(os)}
@@ -266,10 +341,6 @@ function OrdensServico() {
         <CadastroClienteVeiculo
           placa={placaBusca}
           onClose={() => setCadastroAberto(false)}
-          // onConfirm={veiculo => {
-          //   setOrdemParaEditar({ veiculo });
-          //   setCadastroAberto(false);
-          //   setFormAberto(true);
           onConfirm={dados => {
             setOrdemParaEditar(dados);
             setCadastroAberto(false);
@@ -283,4 +354,4 @@ function OrdensServico() {
 
 export default OrdensServico;
 
-
+          

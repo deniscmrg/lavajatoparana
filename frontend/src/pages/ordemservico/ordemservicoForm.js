@@ -3,7 +3,14 @@ import axios from '../../api/axios';
 import './ordemServicoForm.css';
 import { FiTrash2 } from 'react-icons/fi';
 
-const dataHoje = new Date().toISOString();
+// const dataHoje = new Date().toISOString();
+const dataHoje = new Date().toLocaleString('pt-BR', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit'
+});
 
 const OrdemServicoForm = ({ editData, onClose, atualizarOrdens }) => {
   const [quantidadeServico, setQuantidadeServico] = useState(1);
@@ -27,6 +34,7 @@ const OrdemServicoForm = ({ editData, onClose, atualizarOrdens }) => {
   });
   const [todosServicos, setTodosServicos] = useState([]);
   const [servicoSelecionado, setServicoSelecionado] = useState('');
+  const [valorUnitarioCustom, setValorUnitarioCustom] = useState('');
 
   useEffect(() => {
     axios.get('/servicos/')
@@ -119,14 +127,8 @@ const OrdemServicoForm = ({ editData, onClose, atualizarOrdens }) => {
         });
       });
     } 
-    //deveria entrar aqui pra trazer os dados de um novo cadastro de veiculo e proprietario
     
-    // else if (editData.placa && !editData.id) {
     else if (editData.placa && !editData.id) {
-      console.log('vamos ver se entra aqui no ELSE: ',editData.placa)
-      // buscarPorPlaca(editData.placa);
-
-      console.log('entrou para carregar os dados na tela', editData.placa)
       const carregarVeiculoECliente = async () => {
         try {
           
@@ -168,14 +170,15 @@ const OrdemServicoForm = ({ editData, onClose, atualizarOrdens }) => {
       id: s.id,
       descricao: s.descricao,
       quantidade: quantidadeServico,
-      valor_unitario: s.valor_unitario
+      valor_unitario: parseFloat(valorUnitarioCustom),
     };
     setOrdem(prev => ({
       ...prev,
-      servicos: [...prev.servicos, novoServico]
+      servicos: [...prev.servicos, novoServico],
     }));
     setServicoSelecionado('');
     setQuantidadeServico(1);
+    setValorUnitarioCustom('');
   };
 
   const removerServico = idx => {
@@ -187,8 +190,12 @@ const OrdemServicoForm = ({ editData, onClose, atualizarOrdens }) => {
 
 ////////////////
 const salvarOrdem = async () => {
-  try {
+  if (!ordem.operador || ordem.operador.trim() === '') {
+    alert('Por favor, preencha o nome do operador.');
+    return;
+  }
 
+  try {
     let clienteId = ordem.cliente_id;
     if (!clienteId) {
       const cli = await axios.post('/clientes/', {
@@ -260,7 +267,7 @@ const salvarOrdem = async () => {
 
   return (
     <div className="form-overlay">
-      <div className="form-container os-form">
+      <div className="form-container os-form"> 
         <div className="form-header">
           <h3>Ordem de Serviço</h3>
         </div>
@@ -269,24 +276,42 @@ const salvarOrdem = async () => {
           <div><label>#OS</label><input className='read-only' value={ordem.id} readOnly /></div>
           <div><label>Data</label><input className='read-only' value={ordem.data} readOnly /></div>
           <div><label>Status</label><input className='read-only' value={ordem.status} readOnly /></div>
-          <div><label>Operador</label><input value={ordem.operador} onChange={e => setOrdem({ ...ordem, operador: e.target.value })} /></div>
+          <div>
+            <label>Forma Pagto</label>
+            <input
+              className="read-only"
+              value={ordem.forma_pagamento}
+              readOnly
+            />
+          </div>
+          <div><label>Operador</label>
+            {/* <input required value={ordem.operador} onChange={e => setOrdem({ ...ordem, operador: e.target.value })} /> */}
+            <input
+              className='operador-input'
+              required
+              value={ordem.operador}
+              onChange={e => setOrdem({ ...ordem, operador: e.target.value })}
+              readOnly={ordem.status === 'fechada'}
+            />
+          </div>
         </div>
 
         <div className="linha">
-          <div><label>Placa</label><input value={ordem.placa} onChange={e => setOrdem({ ...ordem, placa: e.target.value.toUpperCase() })} onBlur={() => buscarPorPlaca(ordem.placa)} /></div>
-          <div><label>Marca</label><input value={ordem.marca} readOnly /></div>
-          <div><label>Modelo</label><input value={ordem.modelo} readOnly /></div>
-        </div>
+          <div><label>Placa</label>
+          <input value={ordem.placa} className='read-only' readOnly onChange={e => setOrdem({ ...ordem, placa: e.target.value.toUpperCase() })} onBlur={() => buscarPorPlaca(ordem.placa)} /></div>
+          <div><label>Marca</label><input value={ordem.marca} className='read-only' readOnly /></div>
+          <div><label>Modelo</label><input value={ordem.modelo} className='read-only' readOnly /></div>
+        </div> 
 
         <div className="linha">
-          <div><label>Proprietário</label><input value={ordem.cliente_nome} onChange={e => setOrdem({ ...ordem, cliente_nome: e.target.value })} /></div>
-          <div><label>Celular</label><input value={ordem.cliente_celular} onChange={e => setOrdem({ ...ordem, cliente_celular: e.target.value })} /></div>
-          <div><label>E-mail</label><input value={ordem.cliente_email} onChange={e => setOrdem({ ...ordem, cliente_email: e.target.value })} /></div>
+          <div><label>Proprietário</label><input value={ordem.cliente_nome} className='read-only' readOnly onChange={e => setOrdem({ ...ordem, cliente_nome: e.target.value })} /></div>
+          <div><label>Celular</label><input value={ordem.cliente_celular} className='read-only' readOnly onChange={e => setOrdem({ ...ordem, cliente_celular: e.target.value })} /></div>
+          <div><label>E-mail</label><input value={ordem.cliente_email} className='read-only' readOnly onChange={e => setOrdem({ ...ordem, cliente_email: e.target.value })} /></div>
+          <div><label>Tipo</label>
+            <input value={ordem.cliente_tipo} className='read-only' readOnly onChange={e => setOrdem({ ...ordem, cliente_tipo: e.target.value })} />
+          </div>
         </div>
 
-        <div className="linha">
-          <div><label>Tipo</label><select value={ordem.cliente_tipo} onChange={e => setOrdem({ ...ordem, cliente_tipo: e.target.value })}><option value="particular">Particular</option><option value="lojista">Lojista</option></select></div>
-        </div>
 
         <h4>Serviços</h4>
         <table className="tabela-servicos">
@@ -302,39 +327,72 @@ const salvarOrdem = async () => {
           <tbody>
             {ordem.servicos.map((s, i) => (
               <tr key={i}>
-                <td>{s.descricao}</td>
-                <td>{s.quantidade}</td>
-                <td>R$ {parseFloat(s.valor_unitario).toFixed(2)}</td>
-                <td>R$ {(s.quantidade * s.valor_unitario).toFixed(2)}</td>
-                <td><button className="icon-button excluir" onClick={() => removerServico(i)}><FiTrash2 /></button></td>
+                <td style={{ width: '300px'}}>{s.descricao}</td>
+                <td style={{ width: '150px'}}>{s.quantidade}</td>
+                <td style={{ width: '150px'}}>R$ {parseFloat(s.valor_unitario).toFixed(2)}</td>
+                <td style={{ width: '150px'}}>R$ {(s.quantidade * s.valor_unitario).toFixed(2)}</td>
+
+                {/* <td><button className="icon-button excluir" onClick={() => removerServico(i)}><FiTrash2 /></button></td> */}
+                <td style={{ width: '80px'}}>
+                  {ordem.status !== 'finalizada' && (
+                    <button className="icon-button excluir" onClick={() => removerServico(i)}><FiTrash2 /></button>
+                  )}
+                </td>
               </tr>
             ))}
-            <tr>
-              <td>
-                <select value={servicoSelecionado} onChange={e => setServicoSelecionado(e.target.value)}>
-                  <option value="">-- adicionar serviço --</option>
-                  {todosServicos.map(s => (
-                    <option key={s.id} value={s.id}>{s.descricao}</option>
-                  ))}
-                </select>
-              </td>
-              <td>
-                <input
-                  type="number"
-                  min="1"
-                  value={quantidadeServico}
-                  onChange={e => setQuantidadeServico(parseInt(e.target.value) || 1)}
-                />
-              </td>
-              <td colSpan="2"></td>
-              <td><button className="btn" onClick={adicionarServico}>Adicionar</button></td>
-            </tr>
+
+            {ordem.status !== 'finalizada' && (
+              <tr>
+                <td>
+                  <select
+                    value={servicoSelecionado}
+                    onChange={(e) => {
+                      const id = e.target.value;
+                      setServicoSelecionado(id);
+                      const servico = todosServicos.find(s => s.id === parseInt(id));
+                      if (servico) {
+                        setValorUnitarioCustom(servico.valor_unitario);
+                      }
+                    }}
+                  >
+                    <option value="">-- adicionar serviço --</option>
+                    {todosServicos.map(s => (
+                      <option key={s.id} value={s.id}>{s.descricao}</option>
+                    ))}
+                  </select>
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    min="1"
+                    value={quantidadeServico}
+                    onChange={e => setQuantidadeServico(parseInt(e.target.value) || 1)}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={valorUnitarioCustom}
+                    onChange={e => setValorUnitarioCustom(e.target.value)}
+                  />
+                </td>
+                <td colSpan="1"></td>
+                <td><button className="btn" onClick={adicionarServico}>Adicionar</button></td>
+              </tr>
+            )}
           </tbody>
         </table>
 
         <div className="total">TOTAL: R$ {calcularTotal()}</div>
         <div className="form-buttons">
-          <button className="btn-primary" onClick={salvarOrdem}>Salvar</button>
+          
+          {/* <button className="btn-primary" onClick={salvarOrdem}>Salvar</button> */}
+          <button className="btn-primary" onClick={salvarOrdem} disabled={ordem.status === 'finalizada'}>
+            Salvar
+          </button>
+
           <button type="button" className="btn-primary" onClick={onClose}>Cancelar</button>
         </div>
       </div>

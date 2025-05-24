@@ -20,6 +20,11 @@
   color:#2B9FAE; font-size:1.35rem; font-weight:700;
 }
 
+/* --- Tipo  -------------------------------------------------------- */
+.linha-tipo .tipo{
+  width: 500px;
+}
+
 /* --- Grid principal ------------------------------------------------ */
 /* 1ª fileira: Celular | Btn | Nome | Email (largura dobrada) */
 .linha-cliente{
@@ -27,15 +32,41 @@
   grid-template-columns:1fr 130px 1fr 2fr;
   gap:1rem; margin-bottom:1.25rem; align-items:end;
 }
+
+.linha-cliente .email{
+  width: 265px;
+}
+
+.linha-cliente .lojista{
+  width: 500px;
+}
+
+
 /* 2ª fileira: Marca | Modelo | Cor                             */
 .linha-veiculo{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
+  grid-template-columns:repeat(4,1fr);
   gap:1rem; margin-bottom:1.25rem;
 }
 
+.linha-veiculo .marca{
+  width: 150px;
+}
+
 .linha-veiculo .modelo{
-  width: 370px;
+  width: 340px;
+}
+
+.linha-veiculo .placa{
+  width: 100px;
+}
+
+
+.erro-campo {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 4px;
+  display: block;
 }
 
 /* 3ª fileira (tipo / placa) pode continuar flex ou copiar o padrão */
