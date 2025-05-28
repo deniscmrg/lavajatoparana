@@ -49,7 +49,8 @@ function ClienteForm({ onClose, editData }) {
       return;
     }
 
-    const payload = { nome, email, celular: celularNumerico, tipo };
+   const payload = { nome, email, celular: celularNumerico, tipo };
+
 
     try {
       if (editData) {

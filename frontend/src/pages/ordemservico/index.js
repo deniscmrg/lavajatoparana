@@ -76,11 +76,21 @@ function OrdensServico() {
     setFormAberto(true);
   };
 
-  const abrirFechamento = (os) => {
-    setOrdemParaFechar(os);
-    setFecharAberto(true);
+  const abrirFechamento = async (os) => {
+    try {
+      const resServicos = await api.get(`/servicos-da-os/${os.id}/`);
+      const valorTotal = resServicos.data.reduce((acc, s) => acc + Number(s.valor), 0);
+
+      const ordemComTotal = { ...os, total: valorTotal };
+      setOrdemParaFechar(ordemComTotal);
+      setFecharAberto(true);
+    } catch (err) {
+      alert('Erro ao buscar os serviços da OS.');
+      console.error(err);
+    }
   };
 
+  
   const fecharOrdem = async (formaPagamento) => {
     if (!ordemParaFechar) return;
 

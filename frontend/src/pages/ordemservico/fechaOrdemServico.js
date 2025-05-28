@@ -14,6 +14,12 @@ const FechaOrdemServico = ({ ordem, onClose, onConfirm }) => {
     <div className="modal-overlay">
       <div className="modal-conteudo fechar-os">
         <h2>Fechar Ordem de Serviço</h2>
+
+        <div className="resumo-total-os">
+          <strong>Total da OS: </strong>
+          R$ {ordem?.total?.toFixed(2).replace('.', ',')}
+        </div>
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Forma de Pagamento</label>

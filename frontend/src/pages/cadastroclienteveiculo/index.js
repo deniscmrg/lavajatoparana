@@ -61,35 +61,7 @@ const CadastroClienteVeiculo = ({ placa, onClose, onConfirm }) => {
     }
   }, [tipo]);
 
-  // const verificarCliente = async () => {
-  //   try {
-  //     const celularLimpo = celular.replace(/\D/g, '');
-  //     const { data } = await api.get(`/clientes/?celular=${celularLimpo}`);
-  //     const cliente = data.find((c) => c.celular === celularLimpo);
-
-  //     if (cliente) {
-  //       if (cliente.tipo === 'lojista') {
-  //         alert('Este celular pertence a um cliente lojista. O tipo será alterado para \"Lojista\" para que você possa selecioná-lo.');
-  //         setTipo('lojista');
-  //         setCelular('');
-  //         setNome('');
-  //         setEmail('');
-  //         setClienteExistente(null);
-  //       } else {
-  //         setClienteExistente(cliente);
-  //         setNome(cliente.nome);
-  //         setEmail(cliente.email);
-  //         alert('Cliente já cadastrado. Dados preenchidos automaticamente.');
-  //       }
-  //     } else {
-  //       setClienteExistente(null);
-  //       alert('Cliente não encontrado. Preencha os dados para cadastrar.');
-  //     }
-  //   } catch (err) {
-  //     console.error('Erro ao verificar cliente:', err);
-  //     alert('Erro ao verificar cliente.');
-  //   }
-  // };
+  
   const verificarCliente = async () => {
     try {
       const celularLimpo = celular.replace(/\D/g, '');
@@ -154,9 +126,13 @@ const CadastroClienteVeiculo = ({ placa, onClose, onConfirm }) => {
       if (tipo === 'lojista') {
         clienteId = lojistaId;
       } else {
+
+        const celularLimpo = celular.replace(/\D/g, '');
+
         clienteId = clienteExistente
           ? clienteExistente.id
-          : (await api.post('/clientes/', { nome, email, celular, tipo })).data.id;
+          : (await api.post('/clientes/', { nome, email, celular: celularLimpo, tipo })).data.id;
+
       }
       const veiculoRes = await api.post('/veiculos/', {
         placa,
