@@ -151,3 +151,9 @@
   border-radius: 4px;
   border: 1px solid #ccc;
 }
+
+.icon-button.excluir:disabled svg {
+  color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}

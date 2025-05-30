@@ -3,6 +3,9 @@ import axios from '../../api/axios';
 import './ordemServicoForm.css';
 import { FiTrash2 } from 'react-icons/fi';
 
+const usuario = JSON.parse(localStorage.getItem('usuario')) || {};
+const ehAdmin = usuario.tipo === 'admin';
+
 // const dataHoje = new Date().toISOString();
 const dataHoje = new Date().toLocaleString('pt-BR', {
   day: '2-digit',
@@ -285,7 +288,6 @@ const salvarOrdem = async () => {
             />
           </div>
           <div><label>Operador</label>
-            {/* <input required value={ordem.operador} onChange={e => setOrdem({ ...ordem, operador: e.target.value })} /> */}
             <input
               className='operador-input'
               required
@@ -334,14 +336,15 @@ const salvarOrdem = async () => {
 
                 {/* <td><button className="icon-button excluir" onClick={() => removerServico(i)}><FiTrash2 /></button></td> */}
                 <td style={{ width: '80px'}}>
-                  {ordem.status !== 'finalizada' && (
+                  {(ordem.status !== 'finalizada' || ehAdmin) && (
                     <button className="icon-button excluir" onClick={() => removerServico(i)}><FiTrash2 /></button>
                   )}
                 </td>
               </tr>
             ))}
 
-            {ordem.status !== 'finalizada' && (
+            
+            {(ordem.status !== 'finalizada' || ehAdmin) && (
               <tr>
                 <td>
                   <select
@@ -389,7 +392,7 @@ const salvarOrdem = async () => {
         <div className="form-buttons">
           
           {/* <button className="btn-primary" onClick={salvarOrdem}>Salvar</button> */}
-          <button className="btn-primary" onClick={salvarOrdem} disabled={ordem.status === 'finalizada'}>
+          <button className="btn-primary" onClick={salvarOrdem} disabled={ordem.status === 'finalizada' && !ehAdmin}>
             Salvar
           </button>
 

@@ -15,15 +15,20 @@ const Dashboard = () => {
   const [faturasAbertas, setFaturasAbertas] = useState([]);
 
   useEffect(() => {
-    const fetchEntradas = async () => {
+    const fetchEntradasEOrdens = async () => {
       try {
-        const res = await api.get('/caixa/');
-        const apenasEntradas = res.data.filter(item => item.tipo === 'entrada');
+        const [resCaixa, resOS] = await Promise.all([
+          api.get('/caixa/'),
+          api.get('/ordens-servico/')
+        ]);
 
-        // Agrupar por dia dentro do mês/ano escolhido
-        const agrupado = {};
+        const entradas = resCaixa.data.filter(item => item.tipo === 'entrada');
+        const osFinalizadas = resOS.data.filter(os => os.status === 'finalizada');
 
-        apenasEntradas.forEach(item => {
+        const agrupado = {};  // valor R$
+        const osPorDia = {};  // quantidade OSs
+
+        entradas.forEach(item => {
           const [dataCompleta] = item.data.split('T');
           const [anoItem, mesItem, diaItem] = dataCompleta.split('-');
 
@@ -32,43 +37,46 @@ const Dashboard = () => {
           }
         });
 
+        osFinalizadas.forEach(os => {
+          const [dataCompleta] = os.data.split('T');
+          const [anoItem, mesItem, diaItem] = dataCompleta.split('-');
+
+          if (anoItem === ano && mesItem === mes) {
+            osPorDia[diaItem] = (osPorDia[diaItem] || 0) + 1;
+          }
+        });
+
         const diasDoMes = Array.from({ length: 31 }, (_, i) => (i + 1).toString().padStart(2, '0'));
 
         const dados = diasDoMes.map(dia => ({
           dia,
-          valor: Number((agrupado[dia] || 0).toFixed(2))
+          valor: Number((agrupado[dia] || 0).toFixed(2)),
+          quantidade: osPorDia[dia] || 0
         }));
 
         setDadosGrafico(dados);
+
       } catch (error) {
-        console.error('Erro ao buscar entradas:', error);
+        console.error('Erro ao buscar dados:', error);
       }
 
-      const fetchOS = async () => {
-        try {
-          const res = await api.get('/ordens-servico/?status=aberta');
-          setOrdensAbertas(res.data);
-        } catch (err) {
-          console.error('Erro ao buscar OSs abertas:', err);
-        }
-      };
+      try {
+        const res = await api.get('/ordens-servico/?status=aberta');
+        setOrdensAbertas(res.data);
+      } catch (err) {
+        console.error('Erro ao buscar OSs abertas:', err);
+      }
 
-      const fetchFaturas = async () => {
-        try {
-          const res = await api.get('/faturas/');
-          const abertas = res.data.filter(f => !f.data_pagamento);
-          setFaturasAbertas(abertas);
-        } catch (err) {
-          console.error('Erro ao buscar faturas abertas:', err);
-        }
-      };
-
-      fetchOS();
-      fetchFaturas();
-
+      try {
+        const res = await api.get('/faturas/');
+        const abertas = res.data.filter(f => !f.data_pagamento);
+        setFaturasAbertas(abertas);
+      } catch (err) {
+        console.error('Erro ao buscar faturas abertas:', err);
+      }
     };
 
-    fetchEntradas();
+    fetchEntradasEOrdens();
   }, [mes, ano]);
 
   const opcoesMes = [
@@ -109,9 +117,11 @@ const Dashboard = () => {
           <BarChart data={dadosGrafico}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="dia" />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="valor" fill="#2B9FAE" />
+            <YAxis yAxisId="esquerda" orientation="left" tickFormatter={(v) => `R$ ${v}`} />
+            <YAxis yAxisId="direita" orientation="right" allowDecimals={false} />
+            <Tooltip formatter={(value, name) => (name === 'valor' ? `R$ ${value}` : value)} />
+            <Bar yAxisId="esquerda" dataKey="valor" name="Valor (R$)" fill="#2B9FAE" />
+            <Bar yAxisId="direita" dataKey="quantidade" name="Qtd OSs" fill="#4CAF50" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -133,11 +143,7 @@ const Dashboard = () => {
                   <tr key={os.id}>
                     <td>#{os.id}</td>
                     <td>{os.veiculo?.placa}</td>
-                    <td>
-                      {os.data
-                        ? new Date(os.data).toLocaleDateString('pt-BR')
-                        : 'Sem data'}
-                    </td>
+                    <td>{os.data ? new Date(os.data).toLocaleDateString('pt-BR') : 'Sem data'}</td>
                   </tr>
                 ))}
               </tbody>
@@ -161,11 +167,7 @@ const Dashboard = () => {
                   <tr key={fat.id}>
                     <td>#{fat.id}</td>
                     <td>{fat.cliente_nome}</td>
-                    <td>
-                      {fat.data_vencimento
-                        ? new Date(fat.data_vencimento).toLocaleDateString('pt-BR')
-                        : 'Sem data'}
-                    </td>
+                    <td>{fat.data_vencimento ? new Date(fat.data_vencimento).toLocaleDateString('pt-BR') : 'Sem data'}</td>
                   </tr>
                 ))}
               </tbody>
@@ -173,7 +175,6 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-
     </div>
   );
 };

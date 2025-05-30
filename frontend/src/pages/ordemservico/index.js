@@ -24,6 +24,8 @@ function OrdensServico() {
   const [dataInicio, setDataInicio] = useState('');
   const [dataFim, setDataFim] = useState('');
 
+  const usuario = JSON.parse(localStorage.getItem('usuario')) || {};
+  console.log('USUÁRIO LOGADO:', usuario);
 
   const carregarOrdens = async () => {
     try {
@@ -279,29 +281,29 @@ function OrdensServico() {
               <tr key={os.id}>
                 <td>{os.id}</td>
                 <td>{formatarDataHora(os.data)}</td>
-                {/* <td>{new Date(os.data).toLocaleDateString()}</td> */}
                 <td>{os.cliente?.nome || ''}</td>
                 <td>{os.veiculo?.placa || ''}</td>
                 <td>{os.status}</td>
                 <td>{os.forma_pagamento}</td>
                 <td>{os.data_fechamento ? formatarDataHora(os.data_fechamento) : ''}</td>
-                {/* <td>{os.data_fechamento ? new Date(os.data_fechamento).toLocaleString() : ''}</td> */}
                 <td>
                   <button className="icon-button editar" onClick={() => abrirForm(os)} title="Editar">
                     <Edit size={18} />
                   </button>
-                  <button className="icon-button excluir" onClick={() => excluirOrdem(os.id)} title="Excluir">
+                  {usuario.tipo !== 'operador' ? (
+                    <button
+                      className="icon-button excluir"
+                      onClick={() => excluirOrdem(os.id)}
+                      title="Excluir"
+                    >
                       <Trash2 size={18} />
-                  </button>
+                    </button>
+                  ) : (
+                    <button className="icon-button excluir" title="Excluir" disabled>
+                      <Trash2 size={18} />
+                    </button>
+                  )}
 
-                  {/* <button 
-                    className={`icon-button excluir ${os.status === 'finalizada' ? 'desativado' : ''}`}
-                    onClick={() => excluirOrdem(os.id)} 
-                    title="Excluir"
-                    disabled={os.status === 'finalizada'}
-                  >
-                    <Trash2 size={18} />
-                  </button> */}
                   <button
                     className={`icon-button fechar ${os.status === 'finalizada' ? 'desativado' : ''}`}
                     onClick={() => abrirFechamento(os)}
