@@ -52,7 +52,7 @@ class OrdemDeServicoSerializer(serializers.ModelSerializer):
             'id', 'data', 'status', 'operador', 'forma_pagamento',
             'cliente', 'cliente_id', 'veiculo', 'veiculo_id',
             'data_fechamento',  # ← opcional: já que você está mostrando no frontend
-            'servicos_ordem',
+            'servicos_ordem', 'total',
         ]
         extra_kwargs = {
             'status': {'required': False},

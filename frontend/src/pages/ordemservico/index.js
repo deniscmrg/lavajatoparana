@@ -81,9 +81,20 @@ function OrdensServico() {
   const abrirFechamento = async (os) => {
     try {
       const resServicos = await api.get(`/servicos-da-os/${os.id}/`);
-      const valorTotal = resServicos.data.reduce((acc, s) => acc + Number(s.valor), 0);
+     
+      // const valorTotal = resServicos.data.reduce((acc, s) => acc + Number(s.valor), 0);
+      // const ordemComTotal = { ...os, total: valorTotal };
 
-      const ordemComTotal = { ...os, total: valorTotal };
+      const ordemComTotal = {
+          ...os,
+          servicos: resServicos.data,
+          total: resServicos.data.reduce((acc, s) => {
+            const qtd = parseFloat(s.quantidade || 1);
+            const valor = parseFloat(s.valor || 0);
+            return acc + qtd * valor;
+          }, 0)
+        };
+
       setOrdemParaFechar(ordemComTotal);
       setFecharAberto(true);
     } catch (err) {
@@ -117,8 +128,14 @@ function OrdensServico() {
       });
   
       // Busca os serviços vinculados à OS
+      // const resServicos = await api.get(`/servicos-da-os/${ordemParaFechar.id}/`);
+      // const valorTotal = resServicos.data.reduce((acc, s) => acc + Number(s.valor), 0);
       const resServicos = await api.get(`/servicos-da-os/${ordemParaFechar.id}/`);
-      const valorTotal = resServicos.data.reduce((acc, s) => acc + Number(s.valor), 0);
+      const valorTotal = resServicos.data.reduce((acc, s) => {
+        const qtd = parseFloat(s.quantidade || 1);
+        const valor = parseFloat(s.valor || 0);
+        return acc + qtd * valor;
+      }, 0);
   
       // Cria o lançamento no caixa apenas se a forma de pagamento for diferente de "Faturar"
       if (formaPagamento.toLowerCase() !== 'faturar') {

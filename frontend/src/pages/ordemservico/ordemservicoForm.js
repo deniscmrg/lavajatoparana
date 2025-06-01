@@ -125,7 +125,8 @@ const OrdemServicoForm = ({ editData, onClose, atualizarOrdens }) => {
           cliente_id: d.cliente.id,
           servicos: d.servicos_ordem?.map(s => ({
             ...s,
-            valor_unitario: s.valor
+            valor_unitario: s.valor,
+            quantidade: s.quantidade
           })) || [],
         });
       });
@@ -188,9 +189,17 @@ const OrdemServicoForm = ({ editData, onClose, atualizarOrdens }) => {
     setOrdem(prev => ({ ...prev, servicos: prev.servicos.filter((_, i) => i !== idx) }));
   };
 
-  const calcularTotal = () =>
-    ordem.servicos.reduce((sum, s) => sum + parseFloat(s.valor_unitario || 0) * (s.quantidade || 1), 0).toFixed(2);
+  // const calcularTotal = () =>
+  //   ordem.servicos.reduce((sum, s) => sum + parseFloat(s.valor_unitario || 0) * (s.quantidade || 1), 0).toFixed(2);
 
+  const calcularTotal = () => {
+    if (!ordem.servicos || !Array.isArray(ordem.servicos)) return 0;
+    return ordem.servicos.reduce((soma, s) => {
+      const valor = parseFloat(s.valor_unitario || s.valor || 0);
+      const qtd = parseFloat(s.quantidade || 1);
+      return soma + (valor * qtd);
+    }, 0);
+  };
 ////////////////
 const salvarOrdem = async () => {
   if (!ordem.operador || ordem.operador.trim() === '') {
@@ -221,13 +230,13 @@ const salvarOrdem = async () => {
       veiculoPlaca = veh.data.placa;
     }
 
-    // monta o payload com os dados para atualizar
     const payload = {
       status: ordem.status,
       forma_pagamento: ordem.forma_pagamento,
       operador: ordem.operador,
       cliente_id: clienteId,
       veiculo_id: veiculoPlaca,
+      total: parseFloat(calcularTotal()),
     };
 
     // salva os dados:
@@ -332,9 +341,11 @@ const salvarOrdem = async () => {
                 <td style={{ width: '300px'}}>{s.descricao}</td>
                 <td style={{ width: '150px'}}>{s.quantidade}</td>
                 <td style={{ width: '150px'}}>R$ {parseFloat(s.valor_unitario).toFixed(2)}</td>
-                <td style={{ width: '150px'}}>R$ {(s.quantidade * s.valor_unitario).toFixed(2)}</td>
+                <td>
+                  R$ {(parseFloat(s.valor_unitario || 0) * parseFloat(s.quantidade || 1)).toFixed(2)}
+                </td>
+                {/* <td style={{ width: '150px'}}>R$ {(s.quantidade * s.valor_unitario).toFixed(2)}</td> */}
 
-                {/* <td><button className="icon-button excluir" onClick={() => removerServico(i)}><FiTrash2 /></button></td> */}
                 <td style={{ width: '80px'}}>
                   {(ordem.status !== 'finalizada' || ehAdmin) && (
                     <button className="icon-button excluir" onClick={() => removerServico(i)}><FiTrash2 /></button>

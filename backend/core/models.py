@@ -54,7 +54,8 @@ class OrdemDeServico(models.Model):
     operador = models.CharField(max_length=20, null=True, blank=True)
     forma_pagamento = models.CharField(max_length=50, null=True, blank=True)
     veiculo = models.ForeignKey(Veiculo, on_delete=models.CASCADE)
-    data_fechamento = models.DateTimeField(null=True, blank=True)  # <-- CAMPO NOVO
+    data_fechamento = models.DateTimeField(null=True, blank=True)  
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=0)# <-- CAMPO NOVO
 
     def __str__(self):
         return f'OS {self.id} - {self.cliente.nome}'
