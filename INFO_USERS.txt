@@ -1,0 +1,13 @@
+superuser: denis
+pass: D@nte512
+
+usuário: admin
+pass: @dmin123
+
+usuário: operador
+pass: @parana123
+
+
+Serviços:
+DjangoRunserver
+NPMStart 

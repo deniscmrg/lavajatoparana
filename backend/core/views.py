@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from reportlab.lib.utils import ImageReader
 from django.utils.dateformat import DateFormat
 from django.conf import settings
@@ -209,13 +210,29 @@ class FaturaViewSet(viewsets.ModelViewSet):
             data_fim = datetime(ano, mes, ultimo_dia)
 
             os_usadas_ids = FaturaOrdemServico.objects.values_list('ordem_servico_id', flat=True)
+            print(os_usadas_ids)
 
-            os_queryset = OrdemDeServico.objects.filter(
+            os_filtradas = OrdemDeServico.objects.filter(
                 forma_pagamento='faturar',
                 cliente__tipo='lojista',
-                data__date__gte=data_inicio.date(),
-                data__date__lte=data_fim.date()
-            ).exclude(id__in=os_usadas_ids)
+                data__range=(data_inicio, data_fim + timedelta(days=1))
+            )
+
+            os_queryset = os_filtradas.exclude(id__in=os_usadas_ids)
+
+            #logs
+            print('>>> COMPETÊNCIA:', competencia)
+            print('>>> DATA INÍCIO:', data_inicio.date())
+            print('>>> DATA FIM:', data_fim.date())
+            print('>>> OS já usadas em faturas:', list(os_usadas_ids))
+
+            print('>>> Verificando todas as OS possíveis...')
+            todas_os = OrdemDeServico.objects.filter(
+                forma_pagamento='faturar',
+                cliente__tipo='lojista'
+            )
+            for os in todas_os:
+                print(f"OS #{os.id} - Cliente: {os.cliente_id}, Data: {os.data}, Forma: {os.forma_pagamento}")
 
             if cliente_id:
                 os_queryset = os_queryset.filter(cliente__id=cliente_id)
@@ -233,6 +250,8 @@ class FaturaViewSet(viewsets.ModelViewSet):
                         data_vencimento=data_fim,
                         competencia=competencia
                     )
+                    print(f"Fatura criada ID={fatura.id} para cliente {cliente.nome}")
+                    print(f"Total de OSs vinculadas: {os_cliente.count()}")
 
                     for os in os_cliente:
                         FaturaOrdemServico.objects.create(
