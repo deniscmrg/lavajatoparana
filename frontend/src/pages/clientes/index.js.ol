@@ -1,9 +1,9 @@
+// src/pages/clientes/Clientes.js
 import React, { useEffect, useState } from 'react';
 import api from '../../api/axios';
 import ClienteForm from './clienteForm';
 import { Edit, Trash2 } from 'lucide-react';
 import './clientes.css';
-import Paginacao from '../../components/paginacao';
 
 function Clientes() {
   const [clientes, setClientes] = useState([]);
@@ -13,26 +13,35 @@ function Clientes() {
   const [sortColumn, setSortColumn] = useState('nome');
   const [sortDirection, setSortDirection] = useState('asc');
 
-  // Paginação frontend
-  const [paginaAtual, setPaginaAtual] = useState(1);
-  const clientesPorPagina = 11;
-
   const fetchClientes = async () => {
     try {
-      const res = await api.get('/clientes/');
-      setClientes(Array.isArray(res.data.results) ? res.data.results : res.data);
-      setPaginaAtual(1);
+      const response = await api.get('clientes/');
+      setClientes(response.data);
     } catch (error) {
       console.error('Erro ao buscar clientes:', error);
       alert('Erro de sessão. Faça login novamente.');
     }
   };
 
-  useEffect(() => { fetchClientes(); }, []);
+  useEffect(() => {
+    fetchClientes();
+  }, []);
 
-  const handleNew = () => { setEditData(null); setShowForm(true); };
-  const handleEdit = (cliente) => { setEditData(cliente); setShowForm(true); };
-  const handleCloseForm = () => { setShowForm(false); fetchClientes(); };
+  const handleNew = () => {
+    setEditData(null);
+    setShowForm(true);
+  };
+
+  const handleEdit = (cliente) => {
+    setEditData(cliente);
+    setShowForm(true);
+  };
+
+  const handleCloseForm = () => {
+    setShowForm(false);
+    fetchClientes();
+  };
+
   const handleDelete = async (id) => {
     if (window.confirm('Deseja excluir este cliente?')) {
       await api.delete(`clientes/${id}/`);
@@ -41,37 +50,40 @@ function Clientes() {
   };
 
   const handleSort = (column) => {
-    if (sortColumn === column) setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-    else { setSortColumn(column); setSortDirection('asc'); }
+    if (sortColumn === column) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortColumn(column);
+      setSortDirection('asc');
+    }
   };
 
-  const renderSortArrow = (column) => (sortColumn === column ? (sortDirection === 'asc' ? ' ↑' : ' ↓') : '');
+  const renderSortArrow = (column) => {
+    if (sortColumn !== column) return '';
+    return sortDirection === 'asc' ? ' ↑' : ' ↓';
+  };
+
 
   const formatarCelularExibicao = (numero) => {
-    const numeros = numero.replace(/\D/g, '');
-    if (numeros.length <= 10) return numeros.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
-    return numeros.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
-  };
+      const numeros = numero.replace(/\D/g, '');
+      if (numeros.length <= 10) {
+        return numeros.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+      }
+      return numeros.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+    };
 
-  // 🟢 FILTRO + ORDENAÇÃO
-  const clientesFiltrados = [...clientes]
-    .filter(c =>
+  const clientesFiltrados = clientes
+    .filter((c) =>
       c.nome.toLowerCase().includes(filtro.toLowerCase()) ||
       c.celular.toLowerCase().includes(filtro.toLowerCase())
     )
     .sort((a, b) => {
-      const valA = a[sortColumn]?.toString().toLowerCase() || '';
-      const valB = b[sortColumn]?.toString().toLowerCase() || '';
+      const valA = a[sortColumn]?.toString().toLowerCase();
+      const valB = b[sortColumn]?.toString().toLowerCase();
       if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
       if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
       return 0;
     });
-
-  // 🟢 PAGINAÇÃO FRONTEND
-  const indexUltimo = paginaAtual * clientesPorPagina;
-  const indexPrimeiro = indexUltimo - clientesPorPagina;
-  const clientesNaPagina = clientesFiltrados.slice(indexPrimeiro, indexUltimo);
-  const totalPaginas = Math.ceil(clientesFiltrados.length / clientesPorPagina);
 
   return (
     <div className="pagina-clientes">
@@ -101,7 +113,7 @@ function Clientes() {
             </tr>
           </thead>
           <tbody>
-            {clientesNaPagina.map((c) => (
+            {clientesFiltrados.map((c) => (
               <tr key={c.id}>
                 <td>{c.nome}</td>
                 <td>{c.email}</td>
@@ -120,12 +132,6 @@ function Clientes() {
           </tbody>
         </table>
       </div>      
-
-      <Paginacao
-        paginaAtual={paginaAtual}
-        totalPaginas={totalPaginas}
-        onPageChange={setPaginaAtual}
-      />
 
       {showForm && (
         <ClienteForm onClose={handleCloseForm} editData={editData} />

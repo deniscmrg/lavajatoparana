@@ -1,0 +1,36 @@
+/* Paginacao.css */
+.paginacao {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem 0;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+  font-family: Arial, sans-serif;
+}
+
+.paginacao button {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+  min-width: 35px;
+  transition: all 0.2s;
+}
+
+.paginacao button:hover:not(:disabled) {
+  background-color: #f0f0f0;
+}
+
+.paginacao button:disabled {
+  cursor: not-allowed;
+  color: #999;
+  background-color: #eee;
+}
+
+.paginacao button.ativo {
+  background-color: #2b9fae;
+  color: #fff;
+  border-color: #2b9fae;
+}
