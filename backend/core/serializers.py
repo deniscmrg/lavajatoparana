@@ -93,7 +93,7 @@ class FaturaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Fatura
-        fields = ['id', 'cliente_nome', 'competencia', 'data_vencimento', 'data_pagamento', 'status', 'ordens', 'forma_pagamento']
+        fields = ['id', 'cliente', 'cliente_nome', 'competencia', 'data_vencimento', 'data_pagamento', 'status', 'ordens', 'forma_pagamento', 'competencia']
 
     def get_ordens(self, obj):
         # Pegando as ordens de serviço ligadas via FaturaOrdemServico

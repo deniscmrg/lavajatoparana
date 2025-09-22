@@ -10,7 +10,8 @@ from .views import (
     LancamentoCaixaViewSet,
     ServicosPorOrdemAPIView,
     PerfilUsuarioView,
-    exportar_fatura_pdf
+    exportar_fatura_pdf,
+    DashboardResumoAPIView
 )
 
 router = DefaultRouter()
@@ -30,4 +31,5 @@ urlpatterns = [
     path('faturas/gerar-teste/', faturas_gerar),# ← rota adicional manual
     path('faturas/<int:pk>/exportar/', exportar_fatura_pdf, name='exportar_fatura_pdf'),
     path('perfil/', PerfilUsuarioView.as_view(), name='perfil-usuario'),
+    path('dashboard/resumo/', DashboardResumoAPIView.as_view(), name='dashboard-resumo'),
 ]
