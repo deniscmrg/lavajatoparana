@@ -1,5 +1,5 @@
 // src/pages/dashboard/Dashboard.js
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
@@ -8,76 +8,71 @@ import './dashboard.css';
 
 const Dashboard = () => {
   const hoje = new Date();
-  const [mes, setMes] = useState((hoje.getMonth() + 1).toString().padStart(2, '0'));
-  const [ano, setAno] = useState(hoje.getFullYear().toString());
+  const [mes, setMes] = useState(String(hoje.getMonth() + 1).padStart(2, '0'));
+  const [ano, setAno] = useState(String(hoje.getFullYear()));
   const [dadosGrafico, setDadosGrafico] = useState([]);
   const [ordensAbertas, setOrdensAbertas] = useState([]);
   const [faturasAbertas, setFaturasAbertas] = useState([]);
+  const [debugResumo, setDebugResumo] = useState(null); // 👈 debug
+
+  const formataDataBR = (d) => {
+    if (!d) return 'Sem data';
+    const dt = new Date(d);
+    return isNaN(dt.getTime()) ? 'Sem data' : dt.toLocaleDateString('pt-BR');
+  };
 
   useEffect(() => {
-    const fetchEntradasEOrdens = async () => {
+    const fetchResumo = async () => {
       try {
-        const [resCaixa, resOS] = await Promise.all([
-          api.get('/caixa/'),
-          api.get('/ordens-servico/')
-        ]);
+        const mesNum = Number(mes);
+        const anoNum = Number(ano);
 
-        const entradas = resCaixa.data.filter(item => item.tipo === 'entrada');
-        const osFinalizadas = resOS.data.filter(os => os.status === 'finalizada');
+        const { data } = await api.get(`/dashboard/resumo/?ano=${anoNum}&mes=${mesNum}`);
 
-        const agrupado = {};  // valor R$
-        const osPorDia = {};  // quantidade OSs
+        // 👇 DEBUG: guarda o payload bruto
+        setDebugResumo(data);
+        console.log('[DASHBOARD] Resumo recebido:', data);
 
-        entradas.forEach(item => {
-          const [dataCompleta] = item.data.split('T');
-          const [anoItem, mesItem, diaItem] = dataCompleta.split('-');
+        // gráfico já vem pronto do backend, mas forçamos tipagem
+        const graficoTipado = Array.isArray(data?.grafico)
+          ? data.grafico.map((g) => ({
+              dia: String(g.dia).padStart(2, '0'),
+              valor: Number(g.valor) || 0,
+              quantidade: Number(g.quantidade) || 0,
+            }))
+          : [];
+        setDadosGrafico(graficoTipado);
 
-          if (anoItem === ano && mesItem === mes) {
-            agrupado[diaItem] = (agrupado[diaItem] || 0) + parseFloat(item.valor);
-          }
-        });
-
-        osFinalizadas.forEach(os => {
-          const [dataCompleta] = os.data.split('T');
-          const [anoItem, mesItem, diaItem] = dataCompleta.split('-');
-
-          if (anoItem === ano && mesItem === mes) {
-            osPorDia[diaItem] = (osPorDia[diaItem] || 0) + 1;
-          }
-        });
-
-        const diasDoMes = Array.from({ length: 31 }, (_, i) => (i + 1).toString().padStart(2, '0'));
-
-        const dados = diasDoMes.map(dia => ({
-          dia,
-          valor: Number((agrupado[dia] || 0).toFixed(2)),
-          quantidade: osPorDia[dia] || 0
+        // painel OS abertas
+        const osNorm = (data?.os_abertas || []).map((os) => ({
+          id: os.id,
+          veiculo: { placa: os.placa || '-' },
+          data: os.data,
         }));
+        setOrdensAbertas(osNorm);
 
-        setDadosGrafico(dados);
-
-      } catch (error) {
-        console.error('Erro ao buscar dados:', error);
-      }
-
-      try {
-        const res = await api.get('/ordens-servico/?status=aberta');
-        setOrdensAbertas(res.data);
+        // painel faturas
+        setFaturasAbertas(Array.isArray(data?.faturas_abertas) ? data.faturas_abertas : []);
       } catch (err) {
-        console.error('Erro ao buscar OSs abertas:', err);
-      }
-
-      try {
-        const res = await api.get('/faturas/');
-        const abertas = res.data.filter(f => !f.data_pagamento);
-        setFaturasAbertas(abertas);
-      } catch (err) {
-        console.error('Erro ao buscar faturas abertas:', err);
+        console.error('Erro ao carregar resumo do dashboard:', err);
+        setDadosGrafico([]);
+        setOrdensAbertas([]);
+        setFaturasAbertas([]);
+        setDebugResumo(null);
       }
     };
 
-    fetchEntradasEOrdens();
+    fetchResumo();
   }, [mes, ano]);
+
+  const totalOSFinalizadas = useMemo(
+    () => dadosGrafico.reduce((acc, d) => acc + (Number(d.quantidade) || 0), 0),
+    [dadosGrafico]
+  );
+  const totalEntradas = useMemo(
+    () => dadosGrafico.reduce((acc, d) => acc + (Number(d.valor) || 0), 0),
+    [dadosGrafico]
+  );
 
   const opcoesMes = [
     { value: '01', label: 'Janeiro' },
@@ -100,19 +95,25 @@ const Dashboard = () => {
     <div className="pagina-dashboard">
       <div className="filtros-dashboard">
         <select value={mes} onChange={(e) => setMes(e.target.value)}>
-          {opcoesMes.map((op) => (
+          {opcoesMes.map(op => (
             <option key={op.value} value={op.value}>{op.label}</option>
           ))}
         </select>
         <select value={ano} onChange={(e) => setAno(e.target.value)}>
-          {anosDisponiveis.map((a) => (
+          {anosDisponiveis.map(a => (
             <option key={a} value={a}>{a}</option>
           ))}
         </select>
       </div>
 
+      {/* Resumo numérico (ajuda a validar backend) */}
+      <div style={{ display: 'flex', gap: 24, margin: '8px 0 4px 4px', fontSize: 14 }}>
+        <span><strong>Total Entradas:</strong> R$ {totalEntradas.toFixed(2)}</span>
+        <span><strong>OS finalizadas no mês:</strong> {totalOSFinalizadas}</span>
+      </div>
+
       <div className="grafico-container">
-        <h3>Entradas por Dia - {opcoesMes.find(m => m.value === mes).label}/{ano}</h3>
+        <h3>Entradas por Dia - {opcoesMes.find(mo => mo.value === mes)?.label}/{ano}</h3>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={dadosGrafico}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -142,10 +143,13 @@ const Dashboard = () => {
                 {ordensAbertas.map(os => (
                   <tr key={os.id}>
                     <td>#{os.id}</td>
-                    <td>{os.veiculo?.placa}</td>
-                    <td>{os.data ? new Date(os.data).toLocaleDateString('pt-BR') : 'Sem data'}</td>
+                    <td>{os.veiculo?.placa || '-'}</td>
+                    <td>{formataDataBR(os.data)}</td>
                   </tr>
                 ))}
+                {ordensAbertas.length === 0 && (
+                  <tr><td colSpan="3" style={{ textAlign: 'center' }}>Nenhuma OS aberta</td></tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -166,15 +170,25 @@ const Dashboard = () => {
                 {faturasAbertas.map(fat => (
                   <tr key={fat.id}>
                     <td>#{fat.id}</td>
-                    <td>{fat.cliente_nome}</td>
-                    <td>{fat.data_vencimento ? new Date(fat.data_vencimento).toLocaleDateString('pt-BR') : 'Sem data'}</td>
+                    <td>{fat.cliente_nome || '-'}</td>
+                    <td>{formataDataBR(fat.data_vencimento)}</td>
                   </tr>
                 ))}
+                {faturasAbertas.length === 0 && (
+                  <tr><td colSpan="3" style={{ textAlign: 'center' }}>Nenhuma fatura em aberto</td></tr>
+                )}
               </tbody>
             </table>
           </div>
         </div>
       </div>
+
+      {/* DEBUG VISUAL OPCIONAL (apagar depois) */}
+      {/* {process.env.NODE_ENV !== 'production' && debugResumo && (
+        <pre style={{ background:'#f7f7f7', padding:8, borderRadius:6, marginTop:8, overflowX:'auto' }}>
+      {JSON.stringify(debugResumo.grafico?.slice(0, 10), null, 2)}
+        </pre>
+      )} */}
     </div>
   );
 };

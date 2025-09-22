@@ -12,10 +12,21 @@ function Servicos() {
   const [sortColumn, setSortColumn] = useState('descricao');
   const [sortDirection, setSortDirection] = useState('asc');
 
+  // const fetchServicos = async () => {
+  //   try {
+  //     const response = await api.get('servicos/');
+  //     setServicos(response.data);
+  //   } catch (error) {
+  //     console.error('Erro ao buscar serviços:', error);
+  //     alert('Sessão expirada ou sem permissão. Faça login novamente.');
+  //   }
+  // };
   const fetchServicos = async () => {
     try {
-      const response = await api.get('servicos/');
-      setServicos(response.data);
+      const response = await api.get('/servicos/');
+      const data = response.data;
+      // se vier no formato paginado, pega só results
+      setServicos(Array.isArray(data) ? data : data.results || []);
     } catch (error) {
       console.error('Erro ao buscar serviços:', error);
       alert('Sessão expirada ou sem permissão. Faça login novamente.');
