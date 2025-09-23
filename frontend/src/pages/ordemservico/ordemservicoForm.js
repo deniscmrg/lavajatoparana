@@ -40,19 +40,50 @@ const OrdemServicoForm = ({ editData, onClose, atualizarOrdens }) => {
   const [valorUnitarioCustom, setValorUnitarioCustom] = useState('');
 
   // --- CORREÇÃO: trata paginação do DRF + forçar page_size alto (se quiser)
+  // useEffect(() => {
+  //   axios
+  //     .get('/servicos/', { params: { page_size: 500 } })
+  //     .then(res => {
+  //       const data = res.data;
+  //       const lista = Array.isArray(data) ? data : (data?.results ?? []);
+  //       setTodosServicos(Array.isArray(lista) ? lista : []);
+  //     })
+  //     .catch(err => {
+  //       console.error('[SERVIÇOS API] Erro:', err);
+  //       setTodosServicos([]); // garante array
+  //     });
+  // }, []);
   useEffect(() => {
-    axios
-      .get('/servicos/', { params: { page_size: 500 } })
-      .then(res => {
-        const data = res.data;
-        const lista = Array.isArray(data) ? data : (data?.results ?? []);
-        setTodosServicos(Array.isArray(lista) ? lista : []);
-      })
-      .catch(err => {
+    const fetchAllServicos = async () => {
+      try {
+        let url = '/servicos/';
+        let all = [];
+
+        while (url) {
+          const res = await axios.get(url, { params: { page_size: 100 } }); // ajusta o tamanho
+          const data = res.data;
+
+          // se a API for paginada pelo DRF
+          if (data.results) {
+            all = [...all, ...data.results];
+            url = data.next; // próximo link vindo do backend
+          } else {
+            // fallback: não paginado
+            all = Array.isArray(data) ? data : [];
+            url = null;
+          }
+        }
+
+        setTodosServicos(all);
+      } catch (err) {
         console.error('[SERVIÇOS API] Erro:', err);
-        setTodosServicos([]); // garante array
-      });
+        setTodosServicos([]);
+      }
+    };
+
+    fetchAllServicos();
   }, []);
+
 
   const buscarPorPlaca = async (placaInput) => {
     const placaUpper = placaInput.toUpperCase();
