@@ -20,6 +20,7 @@ from django.utils.timezone import now
 import django_filters as df
 from django_filters.rest_framework import DjangoFilterBackend
 
+
 # DRF
 from rest_framework import status, viewsets, filters as drf_filters
 from rest_framework.decorators import action
@@ -381,10 +382,23 @@ class VeiculoViewSet(viewsets.ModelViewSet):
     ordering        = ['placa']
 
 
+# class ServicoViewSet(viewsets.ModelViewSet):
+#     queryset = Servico.objects.all()
+#     serializer_class = ServicoSerializer
+#     permission_classes = [IsAuthenticated]
+
+
 class ServicoViewSet(viewsets.ModelViewSet):
     queryset = Servico.objects.all()
     serializer_class = ServicoSerializer
-    permission_classes = [IsAuthenticated]
+
+    filter_backends  = [drf_filters.SearchFilter, DjangoFilterBackend, drf_filters.OrderingFilter]
+    search_fields    = ['descricao']
+    ordering_fields  = ['id', 'descricao', 'valor_unitario', 'status']
+    ordering         = ['descricao']
+    filterset_fields = ['status']
+
+
 
 
 class OrdemDeServicoViewSet(viewsets.ModelViewSet):

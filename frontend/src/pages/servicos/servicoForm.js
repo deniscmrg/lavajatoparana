@@ -5,13 +5,13 @@ import './servicos.css';
 function ServicoForm({ onClose, editData }) {
   const [descricao, setDescricao] = useState('');
   const [valor, setValor] = useState('');
-  const [status, setStatus] = useState(true);
+  const [status, setStatus] = useState('ativo'); // default string
 
   useEffect(() => {
     if (editData) {
       setDescricao(editData.descricao || '');
       setValor(editData.valor_unitario || '');
-      setStatus(editData.status ?? true);
+      setStatus(editData.status || 'ativo'); // já vem 'ativo' ou 'inativo'
     }
   }, [editData]);
 
@@ -20,8 +20,8 @@ function ServicoForm({ onClose, editData }) {
 
     const payload = {
       descricao,
-      valor_unitario: parseFloat(valor),
-      status: status ? 'ativo' : 'inativo'  // <-- conversão correta
+      valor_unitario: valor === '' ? null : parseFloat(valor),
+      status, // string: 'ativo' ou 'inativo'
     };
 
     try {
@@ -32,8 +32,13 @@ function ServicoForm({ onClose, editData }) {
       }
       onClose();
     } catch (err) {
-      alert('Erro ao salvar serviço.');
-      console.error(err);
+      if (err.response) {
+        console.error('Erro ao salvar serviço:', err.response.data);
+        alert(JSON.stringify(err.response.data));
+      } else {
+        console.error(err);
+        alert('Erro ao salvar serviço.');
+      }
     }
   };
 
@@ -60,7 +65,10 @@ function ServicoForm({ onClose, editData }) {
           />
 
           <label>Status:</label>
-          <select value={status ? 'ativo' : 'inativo'} onChange={(e) => setStatus(e.target.value === 'ativo')}>
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+          >
             <option value="ativo">Ativo</option>
             <option value="inativo">Inativo</option>
           </select>
@@ -76,3 +84,5 @@ function ServicoForm({ onClose, editData }) {
 }
 
 export default ServicoForm;
+
+
