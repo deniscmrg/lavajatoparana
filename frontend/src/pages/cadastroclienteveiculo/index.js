@@ -42,31 +42,48 @@ const CadastroClienteVeiculo = ({ placa, onClose, onConfirm }) => {
     })();
   }, [marca]);
 
+  
+  const fetchLojistas = async () => {
+    try {
+      let url = '/clientes/';
+      let todos = [];
+
+      while (url) {
+        const res = await api.get(url);
+        const data = res.data;
+        const results = data.results || data;
+        todos = [...todos, ...results];
+        url = data.next ? data.next.replace(api.defaults.baseURL, '') : null;
+      }
+
+      setLojistas(todos.filter(c => (c.tipo || '').toLowerCase() === 'lojista'));
+    } catch (err) {
+      setLojistas([]);
+      alert('Erro ao buscar lojistas.');
+    }
+  };
+
   useEffect(() => {
     if (tipo === 'lojista') {
-      (async () => {
-        try {
-          const res = await api.get('/clientes/');
-          setLojistas(res.data.filter(c => c.tipo === 'lojista'));  
-
-          // const res = await api.get('/clientes/?tipo=lojista');
-          // setLojistas(res.data);
-        } catch (err) {
-          setLojistas([]);
-          alert('Erro ao buscar lojistas.');
-        }
-      })();
+      fetchLojistas();   // 👈 agora usa a função que pagina
     } else {
       setLojistaId('');
     }
   }, [tipo]);
 
+
+
   
   const verificarCliente = async () => {
     try {
       const celularLimpo = celular.replace(/\D/g, '');
+      
+      // const { data } = await api.get(`/clientes/?celular=${celularLimpo}`);
+      // const cliente = data.find((c) => c.celular === celularLimpo);
+
       const { data } = await api.get(`/clientes/?celular=${celularLimpo}`);
-      const cliente = data.find((c) => c.celular === celularLimpo);
+      const lista = Array.isArray(data) ? data : (data.results || []);
+      const cliente = lista.find((c) => c.celular === celularLimpo);
 
       if (cliente) {
         if (cliente.tipo === 'lojista') {
