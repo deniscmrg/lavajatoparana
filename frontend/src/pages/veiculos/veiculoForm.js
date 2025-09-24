@@ -14,12 +14,15 @@ function VeiculoForm({ onClose, editData }) {
   const [modelosDisponiveis, setModelosDisponiveis] = useState([]);
 
   useEffect(() => {
+
     const fetchClientes = async () => {
       try {
         const response = await api.get('clientes/');
-        setClientes(response.data);
+        const data = response.data.results || response.data; // garante compatibilidade
+        setClientes(data);
       } catch (err) {
         console.error('Erro ao buscar clientes:', err);
+        setClientes([]); // evita quebrar o map
       }
     };
 
