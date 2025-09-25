@@ -15,16 +15,28 @@ function VeiculoForm({ onClose, editData }) {
 
   useEffect(() => {
 
+   // dentro do useEffect do VeiculoForm
     const fetchClientes = async () => {
       try {
-        const response = await api.get('clientes/');
-        const data = response.data.results || response.data; // garante compatibilidade
-        setClientes(data);
+        let url = '/clientes/';
+        let todos = [];
+
+        while (url) {
+          const res = await api.get(url);
+          const data = res.data;
+          const results = data.results || data;
+          todos = [...todos, ...results];
+          // se tiver paginação, o campo "next" vem completo (com baseURL), então normalizamos
+          url = data.next ? data.next.replace(api.defaults.baseURL, '') : null;
+        }
+
+        setClientes(todos);
       } catch (err) {
         console.error('Erro ao buscar clientes:', err);
-        setClientes([]); // evita quebrar o map
+        setClientes([]);
       }
     };
+
 
     const fetchMarcas = async () => {
       try {
@@ -99,9 +111,13 @@ function VeiculoForm({ onClose, editData }) {
           >
             <option value="">Selecione</option>
             {clientes.map((cliente) => (
+              // <option key={cliente.id} value={cliente.id}>
+              //   {cliente.nome}
+              // </option>
               <option key={cliente.id} value={cliente.id}>
-                {cliente.nome}
+                {cliente.nome} {cliente.celular ? `(${cliente.celular})` : ''}
               </option>
+
             ))}
           </select>
 
